@@ -1,4 +1,4 @@
-function [uu,vv,tt]=mit18086_navierstokes()
+function [U,V]=thermal_convection_projection()
 %MIT18086_NAVIERSTOKES
 %    Solves the incompressible Navier-Stokes equations in a
 %    rectangular domain with prescribed velocities along the
@@ -14,16 +14,23 @@ function [uu,vv,tt]=mit18086_navierstokes()
 %            http://www-math.mit.edu/~seibold/
 % Feel free to modify for teaching and learning.
 %-----------------------------------------------------------------------
-Ra = 100;     % Rayleigh number
-Pr = 1e0;     % Prandtl number
-Re = 1/Pr;    % Reynolds number
-dt = 1e-2;    % time step
-tf = 4e-0;    % final time
-lx = 1;       % width of box
-ly = 1;       % height of box
-nx = 90;      % number of x-gridpoints
-ny = 90;      % number of y-gridpoints
+dt = 1e-3;    % time step
+tf = 2000e-3;    % final time
+ly = 0.01;    % height of box
+lx = 1*ly;    % width of box
+nx = 350;      % number of x-gridpoints
+ny = 350;      % number of y-gridpoints
 nsteps = 10;  % number of steps with graphic output
+%----------------------------- Thermal coefficients -------------------
+b = 3e-3;                       % thermal expansion coefficient
+l = 2.2e-5;                     % thermal conductivity
+nu = 1.54e-5;                   % dynamic viscosity
+g = 9.8;                        % gravity
+T1 = 313;                       % T north boundary
+T2 = 323;                       % T south boundary
+Ra = (b*g*(T2-T1)*ly^3)/(nu*l)  % Rayleigh number
+Pr = nu/l                    % Prandtl number
+Re = 1/nu;                      % Reynolds number
 %-----------------------------------------------------------------------
 nt = ceil(tf/dt); dt = tf/nt;
 x = linspace(0,lx,nx+1); hx = lx/nx;
@@ -31,17 +38,20 @@ y = linspace(0,ly,ny+1); hy = ly/ny;
 [X,Y] = meshgrid(y,x);
 %-----------------------------------------------------------------------
 % initial conditions
-U = zeros(nx-1,ny); V = zeros(nx,ny-1); T = zeros(nx,ny-1);
+T0 = (T1+T2)/2;
+U = zeros(nx-1,ny); V = zeros(nx,ny-1); T = zeros(nx,ny-1)+T0;
 % boundary conditions
-uN = x*0+0;    vN = avg(x)*0;   TN = avg(x)*0+1;
-uS = x*0;      vS = avg(x)*0;   TS = avg(x)*0-1;
-uW = avg(y)*0; vW = y*0;        TW = y*0;
-uE = avg(y)*0; vE = y*0;        TE = y*0;
+uN = x*0+0;    vN = avg(x)*0;   TN = avg(x)*0+T1;
+uS = x*0;      vS = avg(x)*0;   TS = avg(x)*0+T2;
+uW = avg(y)*0; vW = y*0;        TW = y*0+T0;
+uE = avg(y)*0; vE = y*0;        TE = y*0+T0;
 %-----------------------------------------------------------------------
 Ubc = dt/Re*([2*uS(2:end-1)' zeros(nx-1,ny-2) 2*uN(2:end-1)']/hx^2+...
       [uW;zeros(nx-3,ny);uE]/hy^2);
 Vbc = dt/Re*([vS' zeros(nx,ny-3) vN']/hx^2+...
       [2*vW(2:end-1);zeros(nx-2,ny-1);2*vE(2:end-1)]/hy^2);
+Tbc = ([TS' zeros(nx,ny-3) TN']/hx^2+...
+      [2*TW(2:end-1);zeros(nx-2,ny-1);2*TE(2:end-1)]/hy^2);
 
 fprintf('initialization')
 Lp = kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx));
@@ -53,8 +63,8 @@ peru = symamd(Lu); Ru = chol(Lu(peru,peru)); Rut = Ru';
 Lv = speye(nx*(ny-1))+dt/Re*(kron(speye(ny-1),K1(nx,hx,3))+...
      kron(K1(ny-1,hy,2),speye(nx)));
 perv = symamd(Lv); Rv = chol(Lv(perv,perv)); Rvt = Rv';
-LT = speye(nx*ny)+dt*kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx));
-LT(1,1) = 3/2*LT(1,1);%maybe 5/2;
+LT = speye(nx*ny)+dt*l*(kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx)));
+LT(1,1) = LT(1,1);%maybe 5/2;
 perT = symamd(LT); RT = chol(LT(perT,perT)); RTt = RT';
 Lq = kron(speye(ny-1),K1(nx-1,hx,2))+kron(K1(ny-1,hy,2),speye(nx-1));
 perq = symamd(Lq); Rq = chol(Lq(perq,perq)); Rqt = Rq';
@@ -65,7 +75,7 @@ for k = 1:nt
    gamma = min(1.2*dt*max(max(max(abs(U)))/hx,max(max(abs(V)))/hy),1);
    Ue = [uW;U;uE]; Ue = [2*uS'-Ue(:,1) Ue 2*uN'-Ue(:,end)];
    Ve = [vS' V vN']; Ve = [2*vW-Ve(1,:);Ve;2*vE-Ve(end,:)];
-   Te = [TS' T TN']; Te = [2*TW-Te(1,:);Te;2*TE-Te(end,:)];
+   Te = [TS' T TN']; Te = [Te(1,:);Te;Te(end,:)];
    Ua = avg(Ue')'; Ud = diff(Ue')'/2;
    Va = avg(Ve);   Vd = diff(Ve)/2;
    UVx = diff(Ua.*Va-gamma*abs(Ua).*Vd)/hx;
@@ -76,13 +86,12 @@ for k = 1:nt
    V2y = diff((Va.^2-gamma*abs(Va).*Vd)')'/hy;
    U = U-dt*(UVy(2:end-1,:)+U2x);
    V = V-dt*(UVx(:,2:end-1)+V2y);
-   
    % implicit viscosity
    rhs = reshape(U+Ubc,[],1);
    u(peru) = Ru\(Rut\rhs(peru));
    U = reshape(u,nx-1,ny);
    % Buoyancy force included
-   rhs = reshape(V+Vbc+Ra*Pr*T,[],1);
+   rhs = reshape(V+Vbc+dt*(b*g*(T-T0)),[],1);
 
    v(perv) = Rv\(Rvt\rhs(perv));
    V = reshape(v,nx,ny-1);
@@ -95,20 +104,20 @@ for k = 1:nt
    V = V-diff(P')'/hy;
    
    % temperature update
-   Ta = avg(T);% centred Temperature
-   Ua = avg(U')';
-   Va = avg(V);
-   disp(size(Ta))
-   disp(size(T))
-   rhs = reshape(Ta - dt*Ua*diff([TW;T;TE])/hx+dt*Va*diff([TS' T TN']')'/hy,[],1);%Issue with Tx
-   t(perT) = -RT\(RTt\rhs(perT));
+   %rhs = reshape(Ta - dt*Ua*diff([TW;T;TE])/hx+dt*Va*diff([TS' T TN']')'/hy,[],1);%Issue with Tx
+   Tay = diff(Te(2:end-1,:)')';
+   Ta = avg(Te(2:end-1,:)')';
+   Tax = avg(avg(diff(Te))')';
+   rhs = reshape(Ta - dt*Ua*Tax/hx - dt*Va*Tay/hy,[],1);%at cell centers
+   t(perT) = RT\(RTt\rhs(perT));
    T = reshape(t,nx,ny);
-   T = avg(T);%Tshifted to match with v
+   T = avg(T')';%Tshifted to match with v
    
    % visualization
    if floor(25*k/nt)>floor(25*(k-1)/nt), fprintf('.'), end
    if k==1|floor(nsteps*k/nt)>floor(nsteps*(k-1)/nt)
       % stream function
+      figure(1);
       rhs = reshape(diff(U')'/hy-diff(V)/hx,[],1);
       q(perq) = Rq\(Rqt\rhs(perq));
       Q = zeros(nx+1,ny+1);
@@ -123,6 +132,8 @@ for k = 1:nt
       p = sort(p); caxis(p([8 end-7]))
       title(sprintf('Re = %0.1g   t = %0.2g',Re,k*dt))
       drawnow
+      figure(2);
+      contourf(T'); colorbar;
    end
 end
 fprintf('\n')
