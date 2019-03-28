@@ -129,7 +129,7 @@ for k = 1:nt
       Len = sqrt(Ue.^2+Ve.^2+eps);
       quiver(x,y,(Ue./Len)',(Ve./Len)',.4,'k-')
       hold off, axis equal, axis([0 lx 0 ly])
-      p = sort(p); caxis(p([8 end-7]))
+      p = sort(p);% caxis(p([8 end-7]))
       title(sprintf('Re = %0.1g   t = %0.2g',Re,k*dt))
       drawnow
       figure(2);

@@ -15,8 +15,8 @@ function [U,V,f1,f2]=projection_force(nx, ny)
 % Feel free to modify for teaching and learning.
 %-----------------------------------------------------------------------
 Re = 1;     % Reynolds number
-dt = 1.25e-3;    % time step
-tf = 0.5e-0;    % final time
+dt = 1.25e-4;    % time step
+tf = 0.5e-1;    % final time
 lx = 1;       % width of box
 ly = 1;       % height of box
 if nargin < 1
@@ -86,10 +86,10 @@ for k = 1:nt
    V = V-dt*(UVx(:,2:end-1)+V2y);
 
    %J force definition:
-   %f1 = (yyy.^2-yyy)+(xx.^2-xx).*(2*yyy-1)*(t^2)-2*t;
-   %f2 = (xxx.^2-xxx)+(yy.^2-yy).*(2*xxx-1)*(t^2)-2*t;
-   f1 = 0;
-   f2 = 0;
+   f1 = (yyy.^2-yyy)+(xx.^2-xx).*(2*yyy-1)*(t^2)-2*t;
+   f2 = (xxx.^2-xxx)+(yy.^2-yy).*(2*xxx-1)*(t^2)-2*t;
+%    f1 = 0;
+%    f2 = 0;
    % implicit viscosity
    rhs = reshape(U+Ubc+dt*f1,[],1);
    u(peru) = Ru\(Rut\rhs(peru));
