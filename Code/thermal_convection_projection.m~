@@ -1,4 +1,4 @@
-function [Te,U,V]=thermal_convection_projection()
+function [U,V]=thermal_convection_projection()
 %MIT18086_NAVIERSTOKES
 %    Solves the incompressible Navier-Stokes equations in a
 %    rectangular domain with prescribed velocities along the
@@ -14,34 +14,34 @@ function [Te,U,V]=thermal_convection_projection()
 %            http://www-math.mit.edu/~seibold/
 % Feel free to modify for teaching and learning.
 %-----------------------------------------------------------------------
-dt = 1e-3;    % time step
-nx = 80;      % number of x-gridpoints
-ny = 80;      % number of y-gridpoints
-nsteps = 1e6;  % number of steps with graphic output
+dt = 1;    % time step
+nx = 100;      % number of x-gridpoints
+ny = 100;      % number of y-gridpoints
+nsteps = 10;  % number of steps with graphic output
 %----------------------------- Thermal coefficients -------------------
 %------------------------------Glycerine
 Lx = 0.38;                  % Cavity width [m]
 Ly = 0.04;                  % Cavity height [m]
-L = Ly;                     % Reference lenght [m]
-lx = Lx/L;                  % Normalized cavity width []
-ly = Ly/L;                  % Normalized cavity height []
-g = 9.8;                    % Gravity acceleration [m/s^2]
-TC = 291.2;                 % Cold temperature [K]
-TH = 294.78;                % Hot temperature [K]
+L = Ly;                       % Reference lenght [m]
+lx = Lx/L;                    % Normalized cavity width []
+ly = Ly/L;                    % Normalized cavity height []
+g = 9.8;                      % Gravity acceleration [m/s^2]
+TC = 291.2;                   % Cold temperature [K]
+TH = 294.78;                  % Hot temperature [K]
 T0 = 293;                   % Reference Temperature [K]
-Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
-Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
+Tc = 291.2;                   % Cold temperature [K]
+Th = 294.78;                  % Hot temperature [K]
 rho = 1264.02;              % Glycerine density [kg/m^3]
 mu = 1.49;                  % Dynamic viscosity []
 nu = mu/rho;                % Kinematic viscosity []
-B = 5e-4;                   % coeficient of thermal expansion [1/K]
-Pr = 1.25e4;                % Prandtl number
-u0 = 1;                     % Reference velocity [m/s]
+B = 5e-4;                     % coeficient of thermal expansion [1/K]
+Pr = 1.25e4;                  % Prandtl number
+u0 = 1;                       % Reference velocity [m/s]
 Re = rho*u0*L/mu;           % Reynolds number
-b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
-Gr = g*B*(Th-Tc)*(L^3/nu^2);% Grashof number
-Ra = Pr*Gr;                 % Rayleigh number
-tS = 1e4;                   % Real Experiment time [s]
+b = (Th-Tc)*B;                % normalized coeficient of thermal expansion []
+Gr = g*B*(Th-Tc)*(L^3/nu^2);  % Grashof number
+Ra = Pr*Gr;                   % Rayleigh number
+tS = 1e4;                     % Real Experiment time [s]
 tf = tS/L;                  % Simulation time []
 %-----------------------------------------------------------------------
 nt = ceil(tf/dt); dt = tf/nt;
@@ -50,12 +50,12 @@ y = linspace(0,ly,ny+1); hy = ly/ny;
 [X,Y] = meshgrid(y,x);
 %-----------------------------------------------------------------------
 % initial conditions
-U = zeros(nx-1,ny); V = zeros(nx,ny-1); T = zeros(nx,ny-1)+0;
+U = zeros(nx-1,ny); V = zeros(nx,ny-1); T = zeros(nx,ny-1)+T0;
 % boundary conditions
 uN = x*0+0;    vN = avg(x)*0;   TN = avg(x)*0+Tc;
 uS = x*0;      vS = avg(x)*0;   TS = avg(x)*0+Th;
-uW = avg(y)*0; vW = y*0;        TW = y*0+0;
-uE = avg(y)*0; vE = y*0;        TE = y*0+0;
+uW = avg(y)*0; vW = y*0;        TW = y*0+T0;
+uE = avg(y)*0; vE = y*0;        TE = y*0+T0;
 %-----------------------------------------------------------------------
 Ubc = dt/Re*([2*uS(2:end-1)' zeros(nx-1,ny-2) 2*uN(2:end-1)']/hx^2+...
       [uW;zeros(nx-3,ny);uE]/hy^2);
@@ -74,7 +74,7 @@ peru = symamd(Lu); Ru = chol(Lu(peru,peru)); Rut = Ru';
 Lv = speye(nx*(ny-1))+dt/Re*(kron(speye(ny-1),K1(nx,hx,3))+...
      kron(K1(ny-1,hy,2),speye(nx)));
 perv = symamd(Lv); Rv = chol(Lv(perv,perv)); Rvt = Rv';
-LT = speye(nx*ny)+(1/(Re*Pr))*dt*(kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx)));
+LT = speye(nx*ny)+dt*l*(kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx)));
 LT(1,1) = LT(1,1);%maybe 5/2;
 perT = symamd(LT); RT = chol(LT(perT,perT)); RTt = RT';
 Lq = kron(speye(ny-1),K1(nx-1,hx,2))+kron(K1(ny-1,hy,2),speye(nx-1));
@@ -102,8 +102,7 @@ for k = 1:nt
    u(peru) = Ru\(Rut\rhs(peru));
    U = reshape(u,nx-1,ny);
    % Buoyancy force included
-   rhs = reshape(V+Vbc+dt*(1-b*T)*g,[],1);
-   %return
+   rhs = reshape(V+Vbc+dt*(1-b*g*(T-T0)/(Th-Tc)),[],1);
 
    v(perv) = Rv\(Rvt\rhs(perv));
    V = reshape(v,nx,ny-1);
@@ -120,7 +119,7 @@ for k = 1:nt
    Tay = diff(Te(2:end-1,:)')';
    Ta = avg(Te(2:end-1,:)')';
    Tax = avg(avg(diff(Te))')';
-   s = 1;
+   s = 3;
    rhs = reshape(Ta - dt*Ua*Tax/(s*hx) - dt*Va*Tay/(s*hy),[],1);%at cell centers
    t(perT) = RT\(RTt\rhs(perT));
    T = reshape(t,nx,ny);
