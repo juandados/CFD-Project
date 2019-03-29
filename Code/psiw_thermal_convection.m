@@ -13,34 +13,60 @@
 Vd = 0;                 % lid velocity (m/s)
 nsteps = 2e3;               % number of steps with graphic output
 %------------------------------Glycerine
-Lx = 0.38;                  % Cavity width [m]
-Ly = 0.04;                  % Cavity height [m]
+% Lx = 0.38;                  % Cavity width [m]
+% Ly = 0.04;                  % Cavity height [m]
+% L = Ly;                     % Reference lenght [m]
+% lx = Lx/L;                  % Normalized cavity width []
+% ly = Ly/L;                  % Normalized cavity height []
+% G = 9.8;                    % Gravity acceleration [m/s^2]
+% %g = 1*G;                    % Gravity acceleration [m/s^2]
+% g = L*G;                   % Gravity acceleration [m/s^2]
+% TC = 291.2;                 % Cold temperature [K]
+% TH = 294.78;                % Hot temperature [K]
+% T0 = 293;                   % Reference Temperature [K]
+% Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
+% Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
+% rho = 1264.02;              % Glycerine density [kg/m^3]
+% mu = 1.49;                  % Dynamic viscosity []
+% nu = mu/rho;                % Kinematic viscosity []
+% B = 5e-4;                   % coeficient of thermal expansion [1/K]
+% Pr = 1.25e4;                % Prandtl number
+% u0 = 1;                     % Reference velocity [m/s]
+% Re = rho*u0*L/mu;           % Reynolds number
+% b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
+% Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
+% Ra = Pr*Gr;                 % Rayleigh number
+% tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
+% tend = tS/L;                  % Simulation time []
+%------------------------------Air
+Ly = 0.6557;                  % Cavity height [m]
+Lx = Ly*4;                  % Cavity width [m]
 L = Ly;                     % Reference lenght [m]
 lx = Lx/L;                  % Normalized cavity width []
 ly = Ly/L;                  % Normalized cavity height []
-G = 9.8;                    % Gravity acceleration [m/s^2]
-g = 1*G;                    % Gravity acceleration [m/s^2]
-%g = L*G;                   % Gravity acceleration [m/s^2]
-TC = 291.2;                 % Cold temperature [K]
-TH = 294.78;                % Hot temperature [K]
+G = 9.8126;                    % Gravity acceleration [m/s^2]
+%g = 1*G;                    % Gravity acceleration [m/s^2]
+g = L*G;                   % Gravity acceleration [m/s^2]
+TC = 292.5;                 % Cold temperature [K]
+TH = 293.5;                % Hot temperature [K]
 T0 = 293;                   % Reference Temperature [K]
 Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
 Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
-rho = 1264.02;              % Glycerine density [kg/m^3]
-mu = 1.49;                  % Dynamic viscosity []
+rho = 1.205;              % Glycerine density [kg/m^3]
+mu = 1.81e-4;                  % Dynamic viscosity []
 nu = mu/rho;                % Kinematic viscosity []
-B = 5e-4;                   % coeficient of thermal expansion [1/K]
-Pr = 1.25e4;                % Prandtl number
+B = 3.4e-3;                   % coeficient of thermal expansion [1/K]
+Pr = 0.72;                % Prandtl number
 u0 = 1;                     % Reference velocity [m/s]
 Re = rho*u0*L/mu;           % Reynolds number
 b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
-Gr = g*B*(Th-Tc)*(L^3/nu^2);% Grashof number
+Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
 Ra = Pr*Gr;                 % Rayleigh number
 tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
 tend = tS/L;                  % Simulation time []
 % Numerical parameters:
-nx = 49;
-ny = 5;
+nx = 4*100;
+ny = 70;
 
 % Derived parameters:
 dx = lx/nx;  
@@ -55,7 +81,7 @@ dy = ly/ny;
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
-dt = 3.2e-02;
+dt = 2e-2;
 nt = floor(tend / dt);
 
 % Display parameters before starting.
@@ -118,11 +144,11 @@ for i = 1 : nt,
 	+ v(jj,ii) .* (w(jj+1,ii) - w(jj-1,ii)) / (2*dy) ) ...
 	+ (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
 	+ (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
-    + dt*b*(T(jj+1,ii) - T(jj-1,ii)) / (2*dy);
+    - dt*b*G*(T(jj+1,ii) - T(jj-1,ii)) / (2*dy);
   
   % STEP 4. Solve the Poisson equation for streamfunction, by first 
   % setting up the right hand side for Delta psi = -w.  
-  rhs = -w(jj,ii);  % this is a (nx-1) by (ny-1) matrix
+  rhs = w(jj,ii);  % this is a (nx-1) by (ny-1) matrix
 
   % Fix up the RHS for the boundary conditions.
   rhs(1,:)   = rhs(1,:)   - psi(1,ii)   / dy^2;
@@ -160,12 +186,16 @@ for i = 1 : nt,
 
   % STEP 7. Present graphics
   if i==1|floor(nsteps*i/nt)>floor(nsteps*(i-1)/nt)
-      figure(1);
       try 
           cla(plt1); cla(plt2);
       end
-      plt1=subplot(1,2,1);streamslice(u,v);
-      plt2=subplot(1,2,2);contourf(0:dx:lx,0:dy:ly,T);
+      Len = sqrt(u.^2+v.^2+eps);
+      %plt1=subplot(1,2,1);
+      figure(1);
+      quiver(xx,yy,(u./Len),(v./Len),0.4,'k-');
+      %plt2=subplot(1,2,2);
+      figure(2);
+      contourf(0:dx:lx,0:dy:ly,T);
       colorbar;
   end
 end
