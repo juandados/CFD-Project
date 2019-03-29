@@ -25,7 +25,9 @@ Ly = 0.04;                  % Cavity height [m]
 L = Ly;                     % Reference lenght [m]
 lx = Lx/L;                  % Normalized cavity width []
 ly = Ly/L;                  % Normalized cavity height []
-g = 9.8;                    % Gravity acceleration [m/s^2]
+G = 9.8;                    % Gravity acceleration [m/s^2]
+g = 1*G;                    % Gravity acceleration [m/s^2]
+%g = L*G;                    % Gravity acceleration [m/s^2]
 TC = 291.2;                 % Cold temperature [K]
 TH = 294.78;                % Hot temperature [K]
 T0 = 293;                   % Reference Temperature [K]
@@ -75,7 +77,7 @@ Lv = speye(nx*(ny-1))+dt/Re*(kron(speye(ny-1),K1(nx,hx,3))+...
      kron(K1(ny-1,hy,2),speye(nx)));
 perv = symamd(Lv); Rv = chol(Lv(perv,perv)); Rvt = Rv';
 LT = speye(nx*ny)+(1/(Re*Pr))*dt*(kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx)));
-LT(1,1) = LT(1,1);%maybe 5/2;
+LT(1,1) =1*LT(1,1);%maybe 5/2;
 perT = symamd(LT); RT = chol(LT(perT,perT)); RTt = RT';
 Lq = kron(speye(ny-1),K1(nx-1,hx,2))+kron(K1(ny-1,hy,2),speye(nx-1));
 perq = symamd(Lq); Rq = chol(Lq(perq,perq)); Rqt = Rq';
@@ -146,7 +148,7 @@ for k = 1:nt
       title(sprintf('Re = %0.1g   t = %0.2g',Re,k*dt))
       drawnow
       figure(2);
-      contourf(T'); colorbar;
+      contourf(Te'); colorbar;
    end
 end
 fprintf('\n')
