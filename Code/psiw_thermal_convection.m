@@ -11,7 +11,7 @@
 
 % Physical constants:
 Vd = 0;                 % lid velocity (m/s)
-nsteps = 2e3;               % number of steps with graphic output
+nsteps = 1e1;               % number of steps with graphic output
 %------------------------------Glycerine
 % Lx = 0.38;                  % Cavity width [m]
 % Ly = 0.04;                  % Cavity height [m]
@@ -64,9 +64,11 @@ Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
 Ra = Pr*Gr;                 % Rayleigh number
 tS = 1e3;                   % Real Experiment time [s] tS = 1e4; 
 tend = tS/L;                  % Simulation time []
+d = 10;                    % Nutrient diffusion constant relative to Pr*Re;
+c = 1;                         % Nutrient concentration in the soil;
 % Numerical parameters:
-nx = 65;
-ny = 17;
+nx = 200;
+ny = 60;
 
 % Derived parameters:
 dx = lx/nx;  
@@ -81,7 +83,7 @@ dy = ly/ny;
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
-dt = 3e-1;
+dt = 1e-2;
 nt = floor(tend / dt);
 
 % Display parameters before starting.
@@ -108,6 +110,8 @@ T   = psi+Tc;
 T(end,:) = Tc;
 T(1,:) = Th;
 u(end,:) = Vd; % lid BC
+C   = psi;
+C(1,:) = c;
 
 % Set up the matrix for the Poisson equation for psi.  The ordering
 % of unknowns is row-wise: 
@@ -144,8 +148,8 @@ for i = 1 : nt,
   w(jj,ii) = w(jj,ii) - dt * ...
       ( u(jj,ii) .* (w(jj,ii+1) - w(jj,ii-1)) / (2*dx) ...
 	+ v(jj,ii) .* (w(jj+1,ii) - w(jj-1,ii)) / (2*dy) ) ...
-	- (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
-	- (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
+	+ (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
+	+ (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
     + dt*b*g*(T(jj,ii+1) - T(jj,ii-1)) / (2*dx);
   
   % STEP 4. Solve the Poisson equation for streamfunction, by first 
@@ -170,10 +174,8 @@ for i = 1 : nt,
   v(jj,ii) = -(psi(jj,ii+1) - psi(jj,ii-1)) / (2*dx);
   
   % STEP 6.0 impose the boundary conditions boundaries for T:
-  T(jj,1)   = T(jj,2);
-  T(jj,end) = T(jj,end-1);
-  T(1,ii)   = Th;
-  T(end,ii) = Tc;
+  T(jj,1)   = T(jj,2); T(jj,end) = T(jj,end-1);
+  T(1,ii)   = Th; T(end,ii) = Tc;
   
   % STEP 6.1 Compute the solution for the termal advection diffusion
   T(jj,ii) = T(jj,ii) - dt * ...
@@ -182,18 +184,32 @@ for i = 1 : nt,
   + (1/(Pr*Re))*dt*(T(jj,ii+1) - 2*T(jj,ii) + T(jj,ii-1)) / dx^2 ...
   + (1/(Pr*Re))*dt*(T(jj+1,ii) - 2*T(jj,ii) + T(jj-1,ii)) / dy^2;
 
-  % STEP 7. Present graphics
-  if i==1|floor(nsteps*i/nt)>floor(nsteps*(i-1)/nt)
-      try 
-          cla(plt1); cla(plt2);
-      end
+  % STEP 7.0 impose the boundary conditions boundaries for T:
+  C(jj,1)   = C(jj,2); C(jj,end) = C(jj,end-1);
+  C(1,ii)   = c; C(end,ii) = 0;
+  
+  % STEP 7 Compute the solution for the termal advection diffusion
+  C(jj,ii) = C(jj,ii) - dt * ...
+    ((u(jj,ii+1).*C(jj,ii+1) - (u(jj,ii-1).*C(jj,ii-1))) / (2*dx) ...
+  + (v(jj+1,ii).*C(jj+1,ii) - (v(jj-1,ii).*C(jj-1,ii))) / (2*dy)) ...
+  + (1/(d*Pr*Re))*dt*(C(jj,ii+1) - 2*C(jj,ii) + C(jj,ii-1)) / dx^2 ...
+  + (1/(d*Pr*Re))*dt*(C(jj+1,ii) - 2*C(jj,ii) + C(jj-1,ii)) / dy^2;
+
+  % STEP 8. Present graphics
+  if (i==1|floor(nsteps*i/nt)>floor(nsteps*(i-1)/nt))
       Len = sqrt(u.^2+v.^2+eps);
       Len = sqrt(u.^2+v.^2)+eps;
-      hold on;
-      contourf(0:dx:lx,0:dy:ly,T); colorbar;
-      %pcolor(0:dx:lx,0:dy:ly,T); colorbar;
-      shading interp;
+      % ------Plot 1:
+      subplot(2,1,1);
+%       contourf(0:dx:lx,0:dy:ly,T);
+      pcolor(0:dx:lx,0:dy:ly,T); shading interp; 
+      colorbar; hold on;
       quiver(xx,yy,(u./Len),(v./Len),0.6,'k-');
+      axis equal, axis([0 lx 0 ly]);
+      % ------plot 2:
+      subplot(2,1,2);
+      contourf(0:dx:lx,0:dy:ly,C); colorbar;hold on;
+      contour(xx,yy,w,20,'k-');
       hold off, axis equal, axis([0 lx 0 ly]);
       title(sprintf('Re = %0.1g   t = %0.2g',Re,i*dt));
       drawnow
