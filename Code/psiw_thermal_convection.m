@@ -65,8 +65,8 @@ Ra = Pr*Gr;                 % Rayleigh number
 tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
 tend = tS/L;                  % Simulation time []
 % Numerical parameters:
-nx = 100;
-ny = 20;
+nx = 49;
+ny = 5;
 
 % Derived parameters:
 dx = lx/nx;  
@@ -81,7 +81,7 @@ dy = ly/ny;
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
-dt = 2e-2;
+dt = 1e-0;
 nt = floor(tend / dt);
 
 % Display parameters before starting.
@@ -104,7 +104,7 @@ psi = 0*xx;
 w   = psi;
 u   = psi;
 v   = psi;
-T   = psi;
+T   = psi+Tc;
 T(end,:) = Tc;
 T(1,:) = Th;
 u(end,:) = Vd; % lid BC
@@ -191,10 +191,10 @@ for i = 1 : nt,
       end
       Len = sqrt(u.^2+v.^2+eps);
       Len = sqrt(u.^2+v.^2)+eps;
-      %plt1=subplot(1,2,1);
       figure(1);
       hold on;
-      pcolor(0:dx:lx,0:dy:ly,T); colorbar;
+      contourf(0:dx:lx,0:dy:ly,T); colorbar;
+      %pcolor(0:dx:lx,0:dy:ly,T); colorbar;
       shading interp;
       quiver(xx,yy,(u./Len),(v./Len),0.6,'k-');
       hold off, axis equal, axis([0 lx 0 ly]);

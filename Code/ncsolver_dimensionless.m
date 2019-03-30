@@ -11,10 +11,8 @@ Lx = 10.0;             % width of box (m)
 Ly = 1.0;              % height of box (m)
 tend = 5;              % length of time interval (s)
 
-Pr = 0.7;              %Prandtl number
-Ra = 2000;             %Rayleigh number
-
- 
+Pr = 0.72;              %Prandtl number
+Ra = 30000;             %Rayleigh number
  
 
 % Numerical parameters:
@@ -107,24 +105,24 @@ for i = 1:nt
   u(jj,ii) =  (psi(jj+1,ii) - psi(jj-1,ii)) / (2*dy);
   v(jj,ii) = -(psi(jj,ii+1) - psi(jj,ii-1)) / (2*dx);
   
-  figure(1)
+  figure(1); 
   pcolor(xx,yy,T)
   xlabel('x'), ylabel('y')
   shading interp
   colorbar
   title(['Temperature, t=',num2str(t,'%f')])
-  
-  figure(2)
+  hold on;
   quiver(xx,yy,u,v,'AutoScaleFactor',3,'MaxHeadSize',1)
   xlabel('x'), ylabel('y')
   xlim([0 Lx]);ylim([0 Ly]);   
   title(['Velocity, t=',num2str(t,'%f')])
+  hold off;
   
-  figure(3)
-  contour(xx,yy,psi)
-  xlabel('x'), ylabel('y')
-  xlim([0 Lx]);ylim([0 Ly]);   
-  title(['StreamLine, t=',num2str(t,'%f')])
+%   figure(3)
+%   contour(xx,yy,psi)
+%   xlabel('x'), ylabel('y')
+%   xlim([0 Lx]);ylim([0 Ly]);   
+%   title(['StreamLine, t=',num2str(t,'%f')])
   
 
 end 
