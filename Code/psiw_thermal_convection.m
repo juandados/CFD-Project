@@ -66,7 +66,7 @@ tS = 1e4;                   % Real Experiment time [s] tS = 1e4;
 tend = tS/L;                  % Simulation time []
 % Numerical parameters:
 nx = 100;
-ny = 10;
+ny = 20;
 
 % Derived parameters:
 dx = lx/nx;  
@@ -81,7 +81,7 @@ dy = ly/ny;
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
-dt = 2e-1;
+dt = 2e-2;
 nt = floor(tend / dt);
 
 % Display parameters before starting.
@@ -144,11 +144,11 @@ for i = 1 : nt,
 	+ v(jj,ii) .* (w(jj+1,ii) - w(jj-1,ii)) / (2*dy) ) ...
 	+ (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
 	+ (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
-    - dt*b*G*(T(jj+1,ii) - T(jj-1,ii)) / (2*dy);
+    + dt*b*G*(T(jj,ii+1) - T(jj,ii-1)) / (2*dx);
   
   % STEP 4. Solve the Poisson equation for streamfunction, by first 
   % setting up the right hand side for Delta psi = -w.  
-  rhs = w(jj,ii);  % this is a (nx-1) by (ny-1) matrix
+  rhs = -w(jj,ii);  % this is a (nx-1) by (ny-1) matrix
 
   % Fix up the RHS for the boundary conditions.
   rhs(1,:)   = rhs(1,:)   - psi(1,ii)   / dy^2;
@@ -175,8 +175,8 @@ for i = 1 : nt,
   
   % STEP 6.1 Compute the solution for the termal advection diffusion
   T(jj,ii) = T(jj,ii) - dt * ...
-    ( u(jj,ii) .* (T(jj,ii+1) - T(jj,ii-1)) / (2*dx) ...
-  + v(jj,ii) .* (T(jj+1,ii) - T(jj-1,ii)) / (2*dy) ) ...
+    ((u(jj,ii+1).*T(jj,ii+1) - (u(jj,ii-1).*T(jj,ii-1))) / (2*dx) ...
+  + (v(jj+1,ii).*T(jj+1,ii) - (v(jj-1,ii).*T(jj-1,ii))) / (2*dy)) ...
   + (1/(Pr*Re))*dt*(T(jj,ii+1) - 2*T(jj,ii) + T(jj,ii-1)) / dx^2 ...
   + (1/(Pr*Re))*dt*(T(jj+1,ii) - 2*T(jj,ii) + T(jj-1,ii)) / dy^2;
 
@@ -194,7 +194,8 @@ for i = 1 : nt,
       %plt1=subplot(1,2,1);
       figure(1);
       hold on;
-      contourf(0:dx:lx,0:dy:ly,T); colorbar;
+      pcolor(0:dx:lx,0:dy:ly,T); colorbar;
+      shading interp;
       quiver(xx,yy,(u./Len),(v./Len),0.6,'k-');
       hold off, axis equal, axis([0 lx 0 ly]);
       title(sprintf('Re = %0.1g   t = %0.2g',Re,i*dt));
