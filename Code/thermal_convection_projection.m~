@@ -1,4 +1,4 @@
-function [U, Ta, Ue, Ve]=thermal_convection_projection()
+function [Te,U,V]=thermal_convection_projection()
 %MIT18086_NAVIERSTOKES
 %    Solves the incompressible Navier-Stokes equations in a
 %    rectangular domain with prescribed velocities along the
@@ -14,9 +14,9 @@ function [U, Ta, Ue, Ve]=thermal_convection_projection()
 %            http://www-math.mit.edu/~seibold/
 % Feel free to modify for teaching and learning.
 %-----------------------------------------------------------------------
-dt = 1e-2;    % time step
-nx = 100;      % number of x-gridpoints
-ny = 50;      % number of y-gridpoints
+dt = 1e-3;    % time step
+nx = 65;      % number of x-gridpoints
+ny = 80;      % number of y-gridpoints
 nsteps = 1e6;  % number of steps with graphic output
 %----------------------------- Thermal coefficients -------------------
 %------------------------------Glycerine
@@ -26,7 +26,7 @@ nsteps = 1e6;  % number of steps with graphic output
 % lx = Lx/L;                  % Normalized cavity width []
 % ly = Ly/L;                  % Normalized cavity height []
 % G = 9.8;                    % Gravity acceleration [m/s^2]
-% %g = 1*G;                    % Gravity acceleration [m/s^2]
+% g = 1*G;                    % Gravity acceleration [m/s^2]
 % g = L*G;                    % Gravity acceleration [m/s^2]
 % TC = 291.2;                 % Cold temperature [K]
 % TH = 294.78;                % Hot temperature [K]
@@ -71,6 +71,7 @@ Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
 Ra = Pr*Gr;                 % Rayleigh number
 tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
 tf = tS/L;                  % Simulation time []
+
 %-----------------------------------------------------------------------
 nt = ceil(tf/dt); dt = tf/nt;
 x = linspace(0,lx,nx+1); hx = lx/nx;
@@ -78,7 +79,7 @@ y = linspace(0,ly,ny+1); hy = ly/ny;
 [X,Y] = meshgrid(y,x);
 %-----------------------------------------------------------------------
 % initial conditions
-U = zeros(nx-1,ny); V = zeros(nx,ny-1); T = zeros(nx,ny-1)+0;
+U = zeros(nx-1,ny); V = zeros(nx,ny-1); T = zeros(nx,ny-1)+Tc;
 % boundary conditions
 uN = x*0+0;    vN = avg(x)*0;   TN = avg(x)*0+Tc;
 uS = x*0;      vS = avg(x)*0;   TS = avg(x)*0+Th;
@@ -103,7 +104,7 @@ Lv = speye(nx*(ny-1))+dt/Re*(kron(speye(ny-1),K1(nx,hx,3))+...
      kron(K1(ny-1,hy,2),speye(nx)));
 perv = symamd(Lv); Rv = chol(Lv(perv,perv)); Rvt = Rv';
 LT = speye(nx*ny)+(1/(Re*Pr))*dt*(kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx)));
-LT(1,1) =3/2*LT(1,1);%maybe 5/2;
+LT(1,1) =1*LT(1,1);%maybe 5/2;
 perT = symamd(LT); RT = chol(LT(perT,perT)); RTt = RT';
 Lq = kron(speye(ny-1),K1(nx-1,hx,2))+kron(K1(ny-1,hy,2),speye(nx-1));
 perq = symamd(Lq); Rq = chol(Lq(perq,perq)); Rqt = Rq';
@@ -144,19 +145,14 @@ for k = 1:nt
    V = V-diff(P')'/hy;
    
    % temperature update
+   %rhs = reshape(Ta - dt*Ua*diff([TW;T;TE])/hx+dt*Va*diff([TS' T TN']')'/hy,[],1);%Issue with Tx
+   Tay = diff(Te(2:end-1,:)')';
    Ta = avg(Te(2:end-1,:)')';
-   Ta = [TN' Ta TS'];  Ta=[Ta(1,:);Ta;Ta(end,:)];
-   
+   Tax = avg(avg(diff(Te))')';
    s = 1;
-%    rhs = reshape(Ta - dt*(Ua.*Tax/(s*hx) - Va.*Tay/(s*hy)),[],1);%at cell centers
-%    t(perT) = RT\(RTt\rhs(perT));
-%    T = reshape(t,nx,ny);
-return
-   T = Ta - (dt/hx)*(adiff(Ue).*(Ta(2:end-1,:)+Ta(3:end,:))/2 - U.*(Ta(1:end-2,:)+Ta(2:end-1,:))/2) + ...
-       - (dt/hy)*(V.*(Ta(:,2:end-1)+Ta(:,3:end))/2 - V.*(Ta(:,1:end-2)+Ta(:,2:end-1))/2) + ...
-       + (dt/(Re*Pr*(hx^2)))*(Ta(3:end,:)-2*Ta(2:end-1,:)+Ta(1:end-2,:)) + ...
-       + (dt/(Re*Pr*(hy^2)))*(Ta(:,3:end)-2*Ta(:,2:end-1)+Ta(:,1:end-2));
-   
+   rhs = reshape(Ta - dt*Ua*Tax/(s*hx) - dt*Va*Tay/(s*hy),[],1);%at cell centers
+   t(perT) = RT\(RTt\rhs(perT));
+   T = reshape(t,nx,ny);
    T = avg(T')';%Tshifted to match with v
    
    % visualization
@@ -168,19 +164,18 @@ return
       q(perq) = Rq\(Rqt\rhs(perq));
       Q = zeros(nx+1,ny+1);
       Q(2:end-1,2:end-1) = reshape(q,nx-1,ny-1);
-      clf, contourf(avg(x),avg(y),Ta',20,'w-'), hold on
+      clf, contourf(avg(x),avg(y),P',20,'w-'), hold on
       contour(x,y,Q',20,'k-');
       Ue = [uS' avg([uW;U;uE]')' uN'];
       Ve = [vW;avg([vS' V vN']);vE];
-      Len = sqrt(Ue.^2+Ve.^2)+eps;
-      quiver(x,y,(Ue./Len)',(Ve./Len)',.9,'k-')
-      %streamslice(Ue',Ve',.4,'k-')
+      Len = sqrt(Ue.^2+Ve.^2+eps);
+      quiver(x,y,(Ue./Len)',(Ve./Len)',.4,'k-')
       hold off, axis equal, axis([0 lx 0 ly])
       p = sort(p);% caxis(p([8 end-7]))
       title(sprintf('Re = %0.1g   t = %0.2g',Re,k*dt))
+      drawnow
       figure(2);
       contourf(Te'); colorbar;
-      drawnow
    end
 end
 fprintf('\n')

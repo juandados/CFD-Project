@@ -62,11 +62,11 @@ Re = rho*u0*L/mu;           % Reynolds number
 b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
 Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
 Ra = Pr*Gr;                 % Rayleigh number
-tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
+tS = 1e3;                   % Real Experiment time [s] tS = 1e4; 
 tend = tS/L;                  % Simulation time []
 % Numerical parameters:
-nx = 49;
-ny = 5;
+nx = 65;
+ny = 17;
 
 % Derived parameters:
 dx = lx/nx;  
@@ -75,13 +75,13 @@ dy = ly/ny;
 % Choose a time step based on the minimum of the two time step
 % restrictions that come from the von Neumann analysis of the
 % 2D linear advection-diffusion equation.
-% dt1 = min(dx,dy) / Vd;              % advection restriction
+% dt1 = min(dx,dy);              % advection restriction
 % dt2 = 0.5 / nu / (1/dx^2 + 1/dy^2); % diffusion restriction
 % dt3 = nu / Vd^2;                    % mixed (*not used*)
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
-dt = 1e-0;
+dt = 3e-1;
 nt = floor(tend / dt);
 
 % Display parameters before starting.
@@ -125,7 +125,9 @@ A = spdiags( [my*e, mx*esub, -2*(mx+my)*e, mx*esup, my*e], ...
 % useful when indexing arrays below.
 ii = 2:nx;
 jj = 2:ny;
+h1 = figure(1);
 fprintf(', time loop\n--20%%--40%%--60%%--80%%-100%%\n')
+
 for i = 1 : nt,
   % STEP 2. Compute vorticity by differencing the velocities,
   % first in the interior:
@@ -142,9 +144,9 @@ for i = 1 : nt,
   w(jj,ii) = w(jj,ii) - dt * ...
       ( u(jj,ii) .* (w(jj,ii+1) - w(jj,ii-1)) / (2*dx) ...
 	+ v(jj,ii) .* (w(jj+1,ii) - w(jj-1,ii)) / (2*dy) ) ...
-	+ (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
-	+ (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
-    + dt*b*G*(T(jj,ii+1) - T(jj,ii-1)) / (2*dx);
+	- (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
+	- (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
+    + dt*b*g*(T(jj,ii+1) - T(jj,ii-1)) / (2*dx);
   
   % STEP 4. Solve the Poisson equation for streamfunction, by first 
   % setting up the right hand side for Delta psi = -w.  
@@ -180,10 +182,6 @@ for i = 1 : nt,
   + (1/(Pr*Re))*dt*(T(jj,ii+1) - 2*T(jj,ii) + T(jj,ii-1)) / dx^2 ...
   + (1/(Pr*Re))*dt*(T(jj+1,ii) - 2*T(jj,ii) + T(jj-1,ii)) / dy^2;
 
-%   if i==10
-%   return
-%   end
-
   % STEP 7. Present graphics
   if i==1|floor(nsteps*i/nt)>floor(nsteps*(i-1)/nt)
       try 
@@ -191,7 +189,6 @@ for i = 1 : nt,
       end
       Len = sqrt(u.^2+v.^2+eps);
       Len = sqrt(u.^2+v.^2)+eps;
-      figure(1);
       hold on;
       contourf(0:dx:lx,0:dy:ly,T); colorbar;
       %pcolor(0:dx:lx,0:dy:ly,T); colorbar;

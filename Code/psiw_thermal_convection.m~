@@ -62,11 +62,11 @@ Re = rho*u0*L/mu;           % Reynolds number
 b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
 Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
 Ra = Pr*Gr;                 % Rayleigh number
-tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
+tS = 1e3;                   % Real Experiment time [s] tS = 1e4; 
 tend = tS/L;                  % Simulation time []
 % Numerical parameters:
-nx = 2*50;
-ny = 2*5;
+nx = 65;
+ny = 17;
 
 % Derived parameters:
 dx = lx/nx;  
@@ -75,13 +75,13 @@ dy = ly/ny;
 % Choose a time step based on the minimum of the two time step
 % restrictions that come from the von Neumann analysis of the
 % 2D linear advection-diffusion equation.
-% dt1 = min(dx,dy) / Vd;              % advection restriction
+% dt1 = min(dx,dy);              % advection restriction
 % dt2 = 0.5 / nu / (1/dx^2 + 1/dy^2); % diffusion restriction
 % dt3 = nu / Vd^2;                    % mixed (*not used*)
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
-dt = 3.2e-2;
+dt = 3e-1;
 nt = floor(tend / dt);
 
 % Display parameters before starting.
@@ -104,7 +104,7 @@ psi = 0*xx;
 w   = psi;
 u   = psi;
 v   = psi;
-T   = psi;
+T   = psi+Tc;
 T(end,:) = Tc;
 T(1,:) = Th;
 u(end,:) = Vd; % lid BC
@@ -125,7 +125,13 @@ A = spdiags( [my*e, mx*esub, -2*(mx+my)*e, mx*esup, my*e], ...
 % useful when indexing arrays below.
 ii = 2:nx;
 jj = 2:ny;
+h1 = figure(1);
 fprintf(', time loop\n--20%%--40%%--60%%--80%%-100%%\n')
+
+Lp = kron(speye(ny),K1(nx,hx,1))+kron(K1(ny,hy,1),speye(nx));
+Lp(1,1) = 3/2*Lp(1,1);
+perp = symamd(Lp); Rp = chol(Lp(perp,perp)); Rpt = Rp';
+
 for i = 1 : nt,
   % STEP 2. Compute vorticity by differencing the velocities,
   % first in the interior:
@@ -142,9 +148,9 @@ for i = 1 : nt,
   w(jj,ii) = w(jj,ii) - dt * ...
       ( u(jj,ii) .* (w(jj,ii+1) - w(jj,ii-1)) / (2*dx) ...
 	+ v(jj,ii) .* (w(jj+1,ii) - w(jj-1,ii)) / (2*dy) ) ...
-	+ (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
-	+ (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
-    - dt*b*G*(T(jj+1,ii) - T(jj-1,ii)) / (2*dy);
+	- (1/Re)*dt*(w(jj,ii+1) - 2*w(jj,ii) + w(jj,ii-1)) / dx^2 ...
+	- (1/Re)*dt*(w(jj+1,ii) - 2*w(jj,ii) + w(jj-1,ii)) / dy^2 ...
+    + dt*b*g*(T(jj,ii+1) - T(jj,ii-1)) / (2*dx);
   
   % STEP 4. Solve the Poisson equation for streamfunction, by first 
   % setting up the right hand side for Delta psi = -w.  
@@ -158,7 +164,9 @@ for i = 1 : nt,
 
   % Finally, convert the RHS to a vector and solve the linear system.
   rhs = reshape( rhs', nn, 1 ); % this is a (nx-1)*(ny-1)-vector
-  psivec = A \ rhs;
+  %psivec = A \ rhs;
+  p(perp) = -Rp\(Rpt\rhs(perp));
+  P = reshape(p,nx,ny);
   psi(jj,ii) = reshape(psivec, nx-1, ny-1)';
 
   % STEP 5. Compute the new velocity components by differencing
@@ -175,24 +183,29 @@ for i = 1 : nt,
   
   % STEP 6.1 Compute the solution for the termal advection diffusion
   T(jj,ii) = T(jj,ii) - dt * ...
-    ( u(jj,ii) .* (T(jj,ii+1) - T(jj,ii-1)) / (2*dx) ...
-  + v(jj,ii) .* (T(jj+1,ii) - T(jj-1,ii)) / (2*dy) ) ...
+    ((u(jj,ii+1).*T(jj,ii+1) - (u(jj,ii-1).*T(jj,ii-1))) / (2*dx) ...
+  + (v(jj+1,ii).*T(jj+1,ii) - (v(jj-1,ii).*T(jj-1,ii))) / (2*dy)) ...
   + (1/(Pr*Re))*dt*(T(jj,ii+1) - 2*T(jj,ii) + T(jj,ii-1)) / dx^2 ...
   + (1/(Pr*Re))*dt*(T(jj+1,ii) - 2*T(jj,ii) + T(jj-1,ii)) / dy^2;
 
-%   if i==10
-%   return
-%   end
-
   % STEP 7. Present graphics
   if i==1|floor(nsteps*i/nt)>floor(nsteps*(i-1)/nt)
-      figure(1);
       try 
           cla(plt1); cla(plt2);
       end
-      norm = su.^2 + v.^2 + eps
-      plt1=subplot(1,2,1);quiver(u,v);
-      plt2=subplot(1,2,2);contourf(0:dx:lx,0:dy:ly,T);
-      colorbar;
+      Len = sqrt(u.^2+v.^2+eps);
+      Len = sqrt(u.^2+v.^2)+eps;
+      hold on;
+      contourf(0:dx:lx,0:dy:ly,T); colorbar;
+      %pcolor(0:dx:lx,0:dy:ly,T); colorbar;
+      shading interp;
+      quiver(xx,yy,(u./Len),(v./Len),0.6,'k-');
+      hold off, axis equal, axis([0 lx 0 ly]);
+      title(sprintf('Re = %0.1g   t = %0.2g',Re,i*dt));
+      drawnow
   end
 end
+
+function A = K1(n,h,a11)
+% a11: Neumann=1, Dirichlet=2, Dirichlet mid=3;
+A = spdiags([-1 a11 0;ones(n-2,1)*[-1 2 -1];0 a11 -1],-1:1,n,n)'/h^2;
