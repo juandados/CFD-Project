@@ -145,7 +145,7 @@
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $Pe_{T}=\frac{u_{0}L}{D}=RePr$
+\begin_inset Formula $Pe_{T}=\frac{u_{0}L}{\alpha}=RePr$
 \end_inset
 
 : Péclet for Heat transfer

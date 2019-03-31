@@ -1,6 +1,7 @@
-% psiw.m: Solves the unsteady driven cavity problem using the
-%         streamfunction-vorticity algorithm described in
-%         Pozrikidis (1997), pages 608-9.
+function [xx,yy,Us,Vs,Ts,Cs,Ws,dt,tend,tS,Re,Pr,Ra,Pe] = psiw_thermal_convection(nsteps,prob,nx,ny)
+% Solves the unsteady driven cavity problem using the
+% streamfunction-vorticity algorithm described in
+% Pozrikidis (1997), pages 608-9.
 %
 % Author: John Stockie
 %         Department of Mathematics
@@ -8,67 +9,116 @@
 %         stockie@math.sfu.ca
 %
 % Date:   February 11, 2019
+if nargin < 1
+    nsteps = 2;                   % number of steps with graphic output
+end
+nsteps = nsteps +1;
+if nargin < 2
+    prob = 'a';
+end
+if nargin < 3
+    nx = 80;
+end
+if nargin < 4
+    ny = 20;
+end
 
+disp(prob)
 % Physical constants:
-Vd = 0;                 % lid velocity (m/s)
-nsteps = 1e1;               % number of steps with graphic output
-%------------------------------Glycerine
-% Lx = 0.38;                  % Cavity width [m]
-% Ly = 0.04;                  % Cavity height [m]
-% L = Ly;                     % Reference lenght [m]
-% lx = Lx/L;                  % Normalized cavity width []
-% ly = Ly/L;                  % Normalized cavity height []
-% G = 9.8;                    % Gravity acceleration [m/s^2]
-% %g = 1*G;                    % Gravity acceleration [m/s^2]
-% g = L*G;                   % Gravity acceleration [m/s^2]
-% TC = 291.2;                 % Cold temperature [K]
-% TH = 294.78;                % Hot temperature [K]
-% T0 = 293;                   % Reference Temperature [K]
-% Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
-% Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
-% rho = 1264.02;              % Glycerine density [kg/m^3]
-% mu = 1.49;                  % Dynamic viscosity []
-% nu = mu/rho;                % Kinematic viscosity []
-% B = 5e-4;                   % coeficient of thermal expansion [1/K]
-% Pr = 1.25e4;                % Prandtl number
-% u0 = 1;                     % Reference velocity [m/s]
-% Re = rho*u0*L/mu;           % Reynolds number
-% b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
-% Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
-% Ra = Pr*Gr;                 % Rayleigh number
-% tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
-% tend = tS/L;                  % Simulation time []
-%------------------------------Air
-Ly = 0.6557;                  % Cavity height [m]
-Lx = Ly*4;                  % Cavity width [m]
-L = Ly;                     % Reference lenght [m]
-lx = Lx/L;                  % Normalized cavity width []
-ly = Ly/L;                  % Normalized cavity height []
-G = 9.8126;                    % Gravity acceleration [m/s^2]
-%g = 1*G;                    % Gravity acceleration [m/s^2]
-g = L*G;                   % Gravity acceleration [m/s^2]
-TC = 292.5;                 % Cold temperature [K]
-TH = 293.5;                % Hot temperature [K]
-T0 = 293;                   % Reference Temperature [K]
-Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
-Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
-rho = 1.205;              % Glycerine density [kg/m^3]
-mu = 1.81e-4;                  % Dynamic viscosity []
-nu = mu/rho;                % Kinematic viscosity []
-B = 3.4e-3;                   % coeficient of thermal expansion [1/K]
-Pr = 0.72;                % Prandtl number
-u0 = 1;                     % Reference velocity [m/s]
-Re = rho*u0*L/mu;           % Reynolds number
-b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
-Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
-Ra = Pr*Gr;                 % Rayleigh number
-tS = 1e3;                   % Real Experiment time [s] tS = 1e4; 
-tend = tS/L;                  % Simulation time []
-d = 10;                    % Nutrient diffusion constant relative to Pr*Re;
-c = 1;                         % Nutrient concentration in the soil;
-% Numerical parameters:
-nx = 200;
-ny = 60;
+Vd = 0;                         % lid velocity (m/s)
+if prob == 'glycerine' | prob == 'g'
+    Lx = 0.38;                  % Cavity width [m]
+    Ly = 0.04;                  % Cavity height [m]
+    L = Ly;                     % Reference lenght [m]
+    lx = Lx/L;                  % Normalized cavity width []
+    ly = Ly/L;                  % Normalized cavity height []
+    G = 9.8;                    % Gravity acceleration [m/s^2]
+    g = L*G;                    % Gravity acceleration [m/s^2]
+    TC = 291.2;                 % Cold temperature [K]
+    TH = 294.78;                % Hot temperature [K]
+    T0 = 293;                   % Reference Temperature [K]
+    Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
+    Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
+    rho = 1264.02;              % Glycerine density [kg/m^3]
+    mu = 1.49;                  % Dynamic viscosity [kg/(m*s)]
+    nu = mu/rho;                % Kinematic viscosity []
+    B = 5e-4;                   % coeficient of thermal expansion [1/K]
+    Pr = 1.25e4;                % Prandtl number
+    u0 = 1;                     % Reference velocity [m/s]
+    Re = rho*u0*L/mu;           % Reynolds number
+    b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
+    Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
+    Ra = Pr*Gr;                 % Rayleigh number
+    tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
+    tend = tS/L;                % Simulation time []
+    D = 10;                     % Nutrient diffusion constant relative;
+    Pe = u0*L/D;                % Peclet number;
+    c = 1;                      % Nutrient concentration in the bottom wall;
+    dt = 1e-2;
+    % Numerical parameters:
+
+elseif prob == 'air' | prob =='a'
+    Ly = 0.6557;                % Cavity height [m]
+    Lx = Ly*4;                  % Cavity width [m]
+    L = Ly;                     % Reference lenght [m]
+    lx = Lx/L;                  % Normalized cavity width []
+    ly = Ly/L;                  % Normalized cavity height []
+    G = 9.8126;                 % Gravity acceleration [m/s^2]
+    g = L*G;                    % Gravity acceleration [m/s^2]
+    TC = 292.5;                 % Cold temperature [K]
+    TH = 293.5;                 % Hot temperature [K]
+    T0 = 293;                   % Reference Temperature [K]
+    Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
+    Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
+    rho = 1.205;                % Air density [kg/m^3]
+    mu = 1.81e-4;               % Dynamic viscosity []
+    nu = mu/rho;                % Kinematic viscosity []
+    B = 3.4e-3;                 % coeficient of thermal expansion [1/K]
+    Pr = 0.72;                  % Prandtl number
+    u0 = 1;                     % Reference velocity [m/s]
+    Re = rho*u0*L/mu;           % Reynolds number
+    b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
+    Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
+    Ra = Pr*Gr;                 % Rayleigh number
+    tS = 1e3;                   % Real Experiment time [s] tS = 1e4; 
+    tend = tS/L;                % Simulation time []
+    D = 10;                     % Nutrient diffusion constant relative;
+    Pe = u0*L/D;                % Peclet number;
+    c = 1;                      % Nutrient concentration in the bottom wall;
+    dt = 1e-2;
+    
+elseif prob == 'planckton' | prob == 'p'
+    Ly = 1.6e2;                 % Cavity height [m]
+    Lx = Ly*10;                  % Cavity width [m]
+    L = Ly;                     % Reference lenght [m]
+    lx = Lx/L;                  % Normalized cavity width []
+    ly = Ly/L;                  % Normalized cavity height []
+    G = 9.8126;                 % Gravity acceleration [m/s^2]
+    g = L*G;                    % Gravity acceleration [m/s^2]
+    TC = 281;                 % Cold temperature [K]8C
+    TH = 283;                 % Hot temperature [K] 10C
+    T0 = 282;                   % Reference Temperature [K]
+    Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
+    Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
+    rho = 1.025;                % Sea Water density [kg/m^3]
+    mu = 8.9e-4;               % Dynamic viscosity []
+    nu = mu/rho;                % Kinematic viscosity []
+    B = 2.4e-4;                 % coeficient of thermal expansion [1/K]
+    Pr = 7.56;                  % Prandtl number
+    u0 = 1;                % Reference velocity [m/s]
+    Re = rho*u0*L/mu;           % Reynolds number
+    b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
+    Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
+    Ra = Pr*Gr;                 % Rayleigh number
+    tS = 15*24*3600;                   % Real Experiment time [s] tS = 1e4; 
+    tend = tS/L                % Simulation time []
+    D = 1.0260;             % Nutrient diffusion constant relative;
+    Pe = 0.005*Re*Pr;                % Peclet number;
+    c = 1;                      % Nutrient concentration in the bottom wall;
+    %------------
+    dt = 1e-2;
+end
+
 
 % Derived parameters:
 dx = lx/nx;  
@@ -83,7 +133,7 @@ dy = ly/ny;
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
-dt = 1e-2;
+
 nt = floor(tend / dt);
 
 % Display parameters before starting.
@@ -130,9 +180,10 @@ A = spdiags( [my*e, mx*esub, -2*(mx+my)*e, mx*esup, my*e], ...
 ii = 2:nx;
 jj = 2:ny;
 h1 = figure(1);
-fprintf(', time loop\n--20%%--40%%--60%%--80%%-100%%\n')
-
+%fprintf(', time loop\n--20%%--40%%--60%%--80%%-100%%\n')
+k = 1; tt = 1e3;
 for i = 1 : nt,
+  tic
   % STEP 2. Compute vorticity by differencing the velocities,
   % first in the interior:
   w(jj,ii) = (v(jj,ii+1) - v(jj,ii-1)) / (2*dx) ...
@@ -169,7 +220,7 @@ for i = 1 : nt,
 
   % STEP 5. Compute the new velocity components by differencing
   % the streamfunction.  
-  if floor(25*i/nt)>floor(25*(i-1)/nt), fprintf('.'), end
+  %if floor(25*i/nt)>floor(25*(i-1)/nt), fprintf('.'), end
   u(jj,ii) =  (psi(jj+1,ii) - psi(jj-1,ii)) / (2*dy);
   v(jj,ii) = -(psi(jj,ii+1) - psi(jj,ii-1)) / (2*dx);
   
@@ -192,17 +243,25 @@ for i = 1 : nt,
   C(jj,ii) = C(jj,ii) - dt * ...
     ((u(jj,ii+1).*C(jj,ii+1) - (u(jj,ii-1).*C(jj,ii-1))) / (2*dx) ...
   + (v(jj+1,ii).*C(jj+1,ii) - (v(jj-1,ii).*C(jj-1,ii))) / (2*dy)) ...
-  + (1/(d*Pr*Re))*dt*(C(jj,ii+1) - 2*C(jj,ii) + C(jj,ii-1)) / dx^2 ...
-  + (1/(d*Pr*Re))*dt*(C(jj+1,ii) - 2*C(jj,ii) + C(jj-1,ii)) / dy^2;
+  + (1/(Pe))*dt*(C(jj,ii+1) - 2*C(jj,ii) + C(jj,ii-1)) / dx^2 ...
+  + (1/(Pe))*dt*(C(jj+1,ii) - 2*C(jj,ii) + C(jj-1,ii)) / dy^2;
 
+  tt(i) = toc;
+  nalerts = 100;
+  if (floor(nalerts*i/nt)>floor(nalerts*(i-1)/nt))
+    clc;
+    fprintf('estimated time: %0.2f\n',median(tt)*(nt-i));
+    %disp(['',num2str(median(tt)*(nt-i)),' s']);
+  end
+  
   % STEP 8. Present graphics
   if (i==1|floor(nsteps*i/nt)>floor(nsteps*(i-1)/nt))
       Len = sqrt(u.^2+v.^2+eps);
       Len = sqrt(u.^2+v.^2)+eps;
       % ------Plot 1:
       subplot(2,1,1);
-%       contourf(0:dx:lx,0:dy:ly,T);
-      pcolor(0:dx:lx,0:dy:ly,T); shading interp; 
+      contourf(0:dx:lx,0:dy:ly,T);
+%       pcolor(0:dx:lx,0:dy:ly,T); shading interp; 
       colorbar; hold on;
       quiver(xx,yy,(u./Len),(v./Len),0.6,'k-');
       axis equal, axis([0 lx 0 ly]);
@@ -213,5 +272,10 @@ for i = 1 : nt,
       hold off, axis equal, axis([0 lx 0 ly]);
       title(sprintf('Re = %0.1g   t = %0.2g',Re,i*dt));
       drawnow
+      % ------saving arrays
+      Us(:,:,k) = u; Vs(:,:,k) = v; Ts(:,:,k) = T; 
+      Ws(:,:,k) = w; Cs(:,:,k) = C;
+      k = k + 1;
   end
+end
 end
