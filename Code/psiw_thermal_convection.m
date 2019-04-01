@@ -80,12 +80,12 @@ elseif prob == 'air' | prob =='a'
     b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
     Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
     Ra = Pr*Gr;                 % Rayleigh number
-    tS = 1e3;                   % Real Experiment time [s] tS = 1e4; 
+    tS = 0.6e3;                   % Real Experiment time [s] tS = 1e4; 
     tend = tS/L;                % Simulation time []
     D = 10;                     % Nutrient diffusion constant relative;
-    Pe = u0*L/D;                % Peclet number;
+    Pe = Re*Pr*0.5;             % Peclet number;
     c = 1;                      % Nutrient concentration in the bottom wall;
-    dt = 1e-2;
+    dt = 3e-2;
     
 elseif prob == 'planckton' | prob == 'p'
     Ly = 1.6e2;                 % Cavity height [m]
@@ -116,7 +116,7 @@ elseif prob == 'planckton' | prob == 'p'
     Pe = 0.005*Re*Pr;                % Peclet number;
     c = 1;                      % Nutrient concentration in the bottom wall;
     %------------
-    dt = 1e-2;
+    dt = 3e-3;
 end
 
 

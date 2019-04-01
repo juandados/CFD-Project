@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.3.3)  30 MAR 2019 15:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.3.3)  1 APR 2019 03:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1151,55 +1151,42 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <12.50194> on input line 51.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8.93> on input line 51.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 323.
+<images/planktonBBQRCropped.pdf, id=13, 446.15771pt x 422.96869pt>
+File: images/planktonBBQRCropped.pdf Graphic file (type pdf)
+<use images/planktonBBQRCropped.pdf>
+Package pdftex.def Info: images/planktonBBQRCropped.pdf  used on input line 280
+.
+(pdftex.def)             Requested size: 343.4266pt x 325.57718pt.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 280.
 
 (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Calculating math sizes for size <37.03> on input line 323.
+LaTeX Font Info:    Calculating math sizes for size <37.03> on input line 280.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <37.03> on input line 323.
+(Font)              <37.03> on input line 280.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <25.92088> on input line 323.
+(Font)              <25.92088> on input line 280.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <18.515> on input line 323.
-<planktonBBQR.pdf, id=15, 543.27055pt x 740.19199pt>
-File: planktonBBQR.pdf Graphic file (type pdf)
-<use planktonBBQR.pdf>
-Package pdftex.def Info: planktonBBQR.pdf  used on input line 323.
-(pdftex.def)             Requested size: 610.54266pt x 831.86685pt.
-LaTeX Font Info:    Calculating math sizes for size <30.85> on input line 323.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <30.85> on input line 323.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <21.59491> on input line 323.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <15.425> on input line 323.
+(Font)              <18.515> on input line 280.
+<images/figure1.pdf, id=16, 1249.71396pt x 551.67206pt>
+File: images/figure1.pdf Graphic file (type pdf)
+<use images/figure1.pdf>
+Package pdftex.def Info: images/figure1.pdf  used on input line 280.
+(pdftex.def)             Requested size: 1609.6131pt x 710.59087pt.
+File: images/planktonBBQRCropped.pdf Graphic file (type pdf)
+<use images/planktonBBQRCropped.pdf>
+Package pdftex.def Info: images/planktonBBQRCropped.pdf  used on input line 280
+.
+(pdftex.def)             Requested size: 804.80655pt x 763.02754pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 323--323
-
- []
-
-
-Underfull \hbox (badness 2393) in paragraph at lines 323--323
-\T1/lmr/m/n/37.03 In or-der to fac-torise a quadratic you should
- []
-
-LaTeX Font Info:    Calculating math sizes for size <44.43> on input line 323.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <44.43> on input line 323.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <31.10085> on input line 323.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <22.215> on input line 323.
-
-Overfull \hbox (4.99402pt too wide) detected at line 323
+Overfull \hbox (4.99402pt too wide) detected at line 280
 [][][] [][][][][][][][][] [][][][][][][][][] [][][][][][][][][] [][][][][][][][
 ][] [][][][][][][][][] [][][][][][][] 
  []
 
 
-Overfull \vbox (311.24983pt too high) detected at line 323
+Overfull \vbox (292.68613pt too high) detected at line 280
  []
 
 
@@ -1209,7 +1196,11 @@ Overfull \hbox (88.20334pt too wide) has occurred while \output is active
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
- <./planktonBBQR.pdf>]
+ <./images/planktonBBQRCropped.pdf> <./images/figure1.pdf
+
+pdfTeX warning: pdflatex (file ./images/figure1.pdf): PDF inclusion: multiple p
+dfs with page group included in a single page
+>]
 \tf@nav=\write6
 \openout6 = `main.nav'.
 
@@ -1219,35 +1210,33 @@ Overfull \hbox (88.20334pt too wide) has occurred while \output is active
 \tf@snm=\write8
 \openout8 = `main.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 325.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 325.
-
-(./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 325.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 325.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 282.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 282.
+ (./main.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 282.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 282.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 22289 strings out of 494847
- 432645 string characters out of 6179081
- 581214 words of memory out of 5000000
- 25086 multiletter control sequences out of 15000+600000
- 99737 words of font info for 94 fonts, out of 8000000 for 9000
+ 22253 strings out of 494847
+ 432025 string characters out of 6179081
+ 568878 words of memory out of 5000000
+ 25048 multiletter control sequences out of 15000+600000
+ 69515 words of font info for 62 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 52i,16n,66p,771b,1452s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/en
-c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/s
-hare/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/l
-m/lm-ec.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texm
-f/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi
-12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/font
-s/type1/public/lm/lmss17.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.p
-fb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on main.pdf (1 page, 138165 bytes).
+ 52i,27n,66p,771b,1489s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dv
+ips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/s
+hare/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texmf/fonts/type1/public/lm
+/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texm
+f/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmss1
+7.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fo
+nts/type1/public/lm/lmsy10.pfb>
+Output written on main.pdf (1 page, 540556 bytes).
 PDF statistics:
- 63 PDF objects out of 1000 (max. 8388607)
- 44 compressed objects within 1 object stream
+ 117 PDF objects out of 1000 (max. 8388607)
+ 79 compressed objects within 1 object stream
  3 named destinations out of 1000 (max. 500000)
- 54 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 59 words of extra memory for PDF output out of 10000 (max. 10000000)
 
