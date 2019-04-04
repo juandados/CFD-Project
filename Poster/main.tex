@@ -128,9 +128,17 @@ To solve numerically the equations:
 %----------------------------------------------------------------------------------------
 
 \begin{block}{BBQ Grill: Air Thermal Convection}
-As benchmark paramenters we chose:
-$$Re=4365.30, \: Pr=0.72, \: Pe=0.07$$
-For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and normalized temperatures Tc=-0.5, Th=0.5. As shown in the figure the fluid shows some cell formations at long term.
+	As benchmark parameters we chose:
+	$$Re=4365.30, \: Pr=0.72, \: Pe=0.07$$
+	For a rectangular cavity width dimensions: 0.65m height, and 2.6m wide, and normalized temperatures Tc=-0.5, Th=0.5. 
+
+	\vspace{1em}
+	The Figure 2 the fluid shows the normalized velocities, temperature and concentration evolution for several times, some remarkable facts are:
+	\begin{itemize}
+		\item Cell formations even for early times.
+		\item Iso-thermal regions.
+		\item Iso-concetration regions.
+	\end{itemize}
 \end{block}
 
 %----------------------------------------------------------------------------------------
@@ -140,14 +148,15 @@ For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and norm
 \begin{column}{\onecolwid}\vspace{-.6in} % The second column within column 2 (column 2.2)
 
 %----------------------------------------------------------------------------------------
-%	P
+%	Cells and Spatial Dependency
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Cells and Spatial grid Dependence}
-1. Factorise $x^2-x-12$.
+\begin{block}{Cells and Spatial Resolution}
+	The Figure 1 shows that the simulation results depend on the discretization size. In the coarse discretization only 4 cells Rayleigh-Benard cells form, compared to 6 in the fine discretization.This indicates that some discretizations cannot completely resolve the strucure of the flow.
+	\vspace{1em}
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/cells.pdf}
-\caption{Cell behaviour}
+	\caption{\hspace{1em}Cell on grids: (top) $\Delta x=156\times10^{-3}, \Delta y=62.5\times10^{-3}$ (bottom) $\Delta x=39\times10^{-3}, \Delta y=15.4\times10^{-3}.$}
 \end{figure}
 \end{block}
 
@@ -160,7 +169,7 @@ For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and norm
 %----------------------------------------------------------------------------------------
 %	IMPORTANT To REMEMBER
 %----------------------------------------------------------------------------------------
-
+\vspace{-2em}
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/figure1.pdf}
 \caption{Cell behaviour}
