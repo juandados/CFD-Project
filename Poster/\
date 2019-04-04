@@ -23,8 +23,8 @@
 \newlength{\onecolwid}
 \newlength{\twocolwid}
 \newlength{\threecolwid}
-\setlength{\paperwidth}{48in} % A0 width: 46.8in
-\setlength{\paperheight}{36in} % A0 height: 33.1in
+\setlength{\paperwidth}{46.8in} % A0 width: 46.8in, defaults 48
+\setlength{\paperheight}{33.1in} % A0 height: 33.1in, default 36
 \setlength{\sepwid}{0.024\paperwidth} % Separation width (white space) between columns
 \setlength{\onecolwid}{0.22\paperwidth} % Width of one column
 \setlength{\twocolwid}{0.464\paperwidth} % Width of two columns
@@ -127,7 +127,7 @@ To solve numerically the equations:
 %	COL2
 %----------------------------------------------------------------------------------------
 
-\begin{block}{BBQ Grill: Air Thermal Convection}
+\begin{block}{BBQ: Air Thermal Convection}
 As benchmark paramenters we chose:
 $$Re=4365.30, \: Pr=0.72, \: Pe=0.07$$
 For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and normalized temperatures Tc=-0.5, Th=0.5. As shown in the figure the fluid shows some cell formations at long term.
@@ -145,11 +145,13 @@ For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and norm
 
 \begin{block}{Cells and Spatial grid Dependence}
 1. Factorise $x^2-x-12$.
+\end{block}
+
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/cells.pdf}
 \caption{Cell behaviour}
 \end{figure}
-\end{block}
+
 
 %----------------------------------------------------------------------------------------
 
@@ -175,23 +177,9 @@ For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and norm
 %	EXAMPLE OF FACTORISATION
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Numerical Convergence}
-\begin{table}
-\vspace{2ex}
-\begin{tabular}{l l l l}
-\toprule
-\textbf{verb} & \textbf{noun} & \textbf{meaning}\\
-\midrule
-add & addition & $+$ \\
-subtract & subtraction & $-$ \\
-multiply & multiplication & $\cdot$ \\
-divide & division & $\div$ \\
-solve & solution & getting answer \\
-substitute & substitution & $t=x^2$ \\
-\bottomrule
-\end{tabular}
-\caption{Word Formation}
-\end{table}
+\begin{block}{Example of Factorisation}
+$$x=-7,\ \ \ x=3$$
+
 \end{block}
 
 %----------------------------------------------------------------------------------------
@@ -215,6 +203,11 @@ The same we could do with another pattern, which state that $x_1 x_2 = \frac{c}{
 
 \end{columns} % End of the split of column 2
 
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{images/planktonBBQRCropped.pdf}
+\caption{Cell behaviour}
+\end{figure}
+
 \end{column} % End of the second column
 
 \begin{column}{\sepwid}\end{column} % Empty spacer column
@@ -230,10 +223,7 @@ The same we could do with another pattern, which state that $x_1 x_2 = \frac{c}{
 	Pythoplackton sinks in the ocean (passive swimmers), 
 the temperature in the ocean varies upto 10C in a year,
 Is the convection what have this important individuals
-\begin{figure}
-\includegraphics[width=1.0\linewidth]{images/planktonSim.pdf}
-\caption{Cell behaviour}
-\end{figure}
+\[\]
 
 \end{block}
 
@@ -241,6 +231,33 @@ Is the convection what have this important individuals
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
+
+\setbeamercolor{block title}{fg=red,bg=white} % Change the block title color
+
+\begin{block}{Glossary}
+
+\begin{table}
+\vspace{2ex}
+\begin{tabular}{l l l l}
+\toprule
+\textbf{verb} & \textbf{noun} & \textbf{meaning}\\
+\midrule
+add & addition & $+$ \\
+subtract & subtraction & $-$ \\
+multiply & multiplication & $\cdot$ \\
+divide & division & $\div$ \\
+solve & solution & getting answer \\
+substitute & substitution & $t=x^2$ \\
+
+
+
+\bottomrule
+\end{tabular}
+\caption{Word Formation}
+\end{table}
+
+
+\end{block}
 
 \setbeamercolor{block alerted title}{fg=black,bg=nyellow} % Change the alert block title colors
 \setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors

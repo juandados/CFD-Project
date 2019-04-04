@@ -23,8 +23,8 @@
 \newlength{\onecolwid}
 \newlength{\twocolwid}
 \newlength{\threecolwid}
-\setlength{\paperwidth}{48in} % A0 width: 46.8in
-\setlength{\paperheight}{36in} % A0 height: 33.1in
+\setlength{\paperwidth}{48in} % A0 width: 46.8in, defaults 48
+\setlength{\paperheight}{36in} % A0 height: 33.1in, default 36
 \setlength{\sepwid}{0.024\paperwidth} % Separation width (white space) between columns
 \setlength{\onecolwid}{0.22\paperwidth} % Width of one column
 \setlength{\twocolwid}{0.464\paperwidth} % Width of two columns
@@ -127,7 +127,7 @@ To solve numerically the equations:
 %	COL2
 %----------------------------------------------------------------------------------------
 
-\begin{block}{BBQ Grill: Air Thermal Convection}
+\begin{block}{BBQ: Air Thermal Convection}
 As benchmark paramenters we chose:
 $$Re=4365.30, \: Pr=0.72, \: Pe=0.07$$
 For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and normalized temperatures Tc=-0.5, Th=0.5. As shown in the figure the fluid shows some cell formations at long term.
@@ -145,11 +145,13 @@ For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and norm
 
 \begin{block}{Cells and Spatial grid Dependence}
 1. Factorise $x^2-x-12$.
+\end{block}
+
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/cells.pdf}
-\caption{Cell behaviour}
+\caption{Ilustration of the number cells depending on the grid size: (up) $\Delta x=\Delta y=0.0625$ (down) $\Delta x=\Delta y=0.0156$.}
 \end{figure}
-\end{block}
+
 
 %----------------------------------------------------------------------------------------
 
@@ -175,23 +177,7 @@ For a rectangular Cavity width dimensions: 0.65m height, and 2.6m wide, and norm
 %	EXAMPLE OF FACTORISATION
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Numerical Convergence}
-\begin{table}
-\vspace{2ex}
-\begin{tabular}{l l l l}
-\toprule
-\textbf{verb} & \textbf{noun} & \textbf{meaning}\\
-\midrule
-add & addition & $+$ \\
-subtract & subtraction & $-$ \\
-multiply & multiplication & $\cdot$ \\
-divide & division & $\div$ \\
-solve & solution & getting answer \\
-substitute & substitution & $t=x^2$ \\
-\bottomrule
-\end{tabular}
-\caption{Word Formation}
-\end{table}
+\begin{block}{Convergence Orders}
 \end{block}
 
 %----------------------------------------------------------------------------------------
@@ -232,8 +218,9 @@ the temperature in the ocean varies upto 10C in a year,
 Is the convection what have this important individuals
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/planktonSim.pdf}
-\caption{Cell behaviour}
+\caption{Ilustration of the number cells depending on the grid size: (up) $\Delta x=\Delta y=0.0625$ (down) $\Delta x=\Delta y=0.0156$.}
 \end{figure}
+
 
 \end{block}
 
@@ -241,6 +228,8 @@ Is the convection what have this important individuals
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
+
+\end{block}
 
 \setbeamercolor{block alerted title}{fg=black,bg=nyellow} % Change the alert block title colors
 \setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
@@ -250,7 +239,6 @@ Is the convection what have this important individuals
 \begin{itemize}
 \item The number of cells depends on the geometry, aspect ratio, as well as the fluid parameters.
 \item The evidence of thermal cells depends on the size of the spatial discretization.
-\item (n.) factor $\rightarrow$ two multiplied factors give result
 \end{itemize}
 \textbf{Pendings}
 \begin{itemize}
