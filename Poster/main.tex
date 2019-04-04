@@ -130,14 +130,14 @@ To solve numerically the equations:
 \begin{block}{BBQ Grill: Air Thermal Convection}
 	As benchmark parameters we chose:
 	$$Re=4365.30, \: Pr=0.72, \: Pe=0.07$$
-	For a rectangular cavity width dimensions: 0.65m height, and 2.6m wide, and normalized temperatures Tc=-0.5, Th=0.5. 
+	For a rectangular cavity width dimensions: 0.65m height, and 2.6m wide, and normalized temperatures $Tc=292.5^{\circ}K$, $Th=293.5^{\circ}K$.
 
 	\vspace{1em}
 	The Figure 2 the fluid shows the normalized velocities, temperature and concentration evolution for several times, some remarkable facts are:
 	\begin{itemize}
+		\item Buyancy force makes rise the warmer water from the bottom.
 		\item Cell formations even for early times.
-		\item Iso-thermal regions.
-		\item Iso-concetration regions.
+		\item Iso-thermal and Iso-concetration regions.
 	\end{itemize}
 \end{block}
 
@@ -172,51 +172,40 @@ To solve numerically the equations:
 \vspace{-2em}
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/figure1.pdf}
-\caption{Cell behaviour}
+\caption{Air thermal convection and mass transfer in normalized velocity, temperature and mass concetration for different times.}
 \end{figure}
-%----------------------------------------------------------------------------------------
-
-\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column again
-
-\begin{column}{\onecolwid} % The first column within column 2 (column 2.1)
-
-%----------------------------------------------------------------------------------------
-%	EXAMPLE OF FACTORISATION
-%----------------------------------------------------------------------------------------
 
 \begin{block}{Numerical Convergence}
-\begin{table}
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline 
-\multicolumn{6}{|c|}{\textbf{Spatial Convergence order}}\tabularnewline
-\hline 
-$u$ & 1.5339 & $v$ & 1.3119 & $T$ & 0.3145\tabularnewline
-\hline 
-\end{tabular}
-\end{table}
+	\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column again
+	
+	\begin{column}{\onecolwid} % The first column within column 2 (column 2.1)
+		Due to the high Reynolds number the experiental study for the convergence rates presents some challenges:
+		\begin{itemize}
+			\item Variations in the grid size cause variation in the direction of rotation in the cells.
+		\end{itemize}
+	\end{column} % End of column 2.1
+	
+	\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
+		\vspace{-2em}
+		\begin{itemize}
+			\item To get a reliable reference it is necesary a both very fine grid and pretty small time step.
+		\end{itemize}
+
+		\begin{table}
+                \begin{tabular}{|c|c|c|c|c|c|}
+                \hline 
+                \multicolumn{6}{|c|}{\textbf{Spatial Convergence order}}\tabularnewline
+                \hline 
+                $u$ & 1.5339 & $v$ & 1.3119 & $T$ & 0.3145\tabularnewline
+                \hline 
+                \end{tabular}
+		\end{table}
+
+	\end{column} % End of column 2.2
+	
+	\end{columns} % End of the split of column 2
 \end{block}
-
 %----------------------------------------------------------------------------------------
-
-\end{column} % End of column 2.1
-
-\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
-
-%----------------------------------------------------------------------------------------
-%	PROOF OF VIETA'S FORMULAS
-%----------------------------------------------------------------------------------------
-
-\begin{block}{ Proof of Vieta's Formulas}
-The same we could do with another pattern, which state that $x_1 x_2 = \frac{c}{a}$, but proving this is going to be your task in next section.
-
-\end{block}
-
-%----------------------------------------------------------------------------------------
-
-\end{column} % End of column 2.2
-
-\end{columns} % End of the split of column 2
-
 \end{column} % End of the second column
 
 \begin{column}{\sepwid}\end{column} % Empty spacer column
@@ -228,13 +217,18 @@ The same we could do with another pattern, which state that $x_1 x_2 = \frac{c}{
 %----------------------------------------------------------------------------------------
 
 \begin{block}{And the plankton?}
-\textbf{}
-	Pythoplackton sinks in the ocean (passive swimmers), 
-the temperature in the ocean varies upto 10C in a year,
-Is the convection what have this important individuals
+	\begin{itemize}
+		\item Pythoplackton is the base of the oceanic food chain, it sinks in the oceans upto $160 m$ per year (passive swimmers).
+		\item The temperature in the ocean varies upto $10^{\circ}K$ in a year.
+		\item The buyency forces keep them it specific regions in the ocean.
+	\end{itemize}
+	We wanted to study the effects of a variation of $2^{\circ}K$ in a big rectangular area in the sea (160m deep, 1.6km wide) with planktonic organisms in the bottom, getting as parameters:
+	$$Re=184269, \: Pr=7.56, \: Pe=6965.39$$
+	Although the Reynolds number in enormus, some general structure of this phenomena may be preserved as the number of cells or the average concetration in specific areas.
+	
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/planktonSim.pdf}
-\caption{Cell behaviour}
+\caption{Thermal convection with planktonic mass transfer in the sea.}
 \end{figure}
 
 \end{block}
@@ -246,19 +240,17 @@ Is the convection what have this important individuals
 
 \setbeamercolor{block alerted title}{fg=black,bg=nyellow} % Change the alert block title colors
 \setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
-
+	\vspace{-2em}
 \begin{alertblock}{Final Thoughts!}
 \textbf{Conclusions}
 \begin{itemize}
-\item The number of cells depends on the geometry, aspect ratio, as well as the fluid parameters.
-\item The evidence of thermal cells depends on the size of the spatial discretization.
-\item (n.) factor $\rightarrow$ two multiplied factors give result
+\item The behavior of the thermal cells depends on the size of the spatial discretization.
+\item Even with high Reynolds numbers the implemented method seems to show properlly the general structure of the fluid.
 \end{itemize}
 \textbf{Pendings}
 \begin{itemize}
 \item A solver using the projection method was considered, however, the stagered grid was an issue for the energy equation.
 \item An implentation using the second order FTBS scheme will help to deal with higher Reynolds numbers.
-\item The time convergence order might be improved using Crank Nicholson.
 \end{itemize}
 
 \end{alertblock}
