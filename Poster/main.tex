@@ -79,7 +79,7 @@
 
 \textbf{Natural Thermal Convection}
 
-Those plumes comming out from our BBQ grill are caused by a differences on density consequence of temperature varitions.
+Those plumes comming out from our BBQ grill are caused by differences on density consequence of temperature variations.
 \vspace{1em}
 \begin{alertblock}{Governing Equations}
 \begin{itemize}
@@ -93,7 +93,7 @@ $$\frac{\partial T}{\partial t}+\left(\overrightarrow{u}\cdot\nabla T\right)=\fr
 $$\frac{\partial c}{\partial t}+\left(\overrightarrow{u}\cdot\nabla c\right)=\frac{1}{Pe}\nabla^{2}c$$
 \end{itemize}
 \end{alertblock}
-The last Eq. models a substance moving with the fluid.
+Where the last Eq. models a substance moving with the fluid.
 \end{block}
 
 %----------------------------------------------------------------------------------------
@@ -101,14 +101,14 @@ The last Eq. models a substance moving with the fluid.
 %----------------------------------------------------------------------------------------
 \vspace{-1em}
 \begin{block}{Method}
-To solve numerically the equations:
+To solve numerically the equations ...
 \begin{enumerate}
 \item Set up the initial conditions for $\psi$, $u$ and $v$.
 \item Solve the vorticity equation. (Exp FTCS).
 \item Solve the Poisson equation for $\psi$. (Std. discr. $\nabla^{2}$).
 \item Compute the new velocity from $\psi$.
-\item Solve the Energy equation for $T$. (Exp FTCS).
-\item Solve the Mass transfer equation. (Exp FTCS).
+\item Solve the energy equation for $T$. (Exp FTCS).
+\item Solve the mass transfer equation. (Exp FTCS).
 \item Go to step 2.
 \end{enumerate}
 \end{block}
@@ -130,13 +130,13 @@ To solve numerically the equations:
 \begin{block}{BBQ Grill: Air Thermal Convection}
 	As benchmark parameters we chose:
 	$$Re=4365.30, \: Pr=0.72, \: Pe=0.07$$
-	For a rectangular cavity width dimensions: 0.65m height, and 2.6m wide, and normalized temperatures $Tc=292.5^{\circ}K$, $Th=293.5^{\circ}K$.
+	For a rectangular cavity width dimensions: 0.65m height, 2.6m wide, and normalized temperatures $Tc=292.5^{\circ}K$, $Th=293.5^{\circ}K$.
 
 	\vspace{1em}
-	The Figure 2 the fluid shows the normalized velocities, temperature and concentration evolution for several times, some remarkable facts are:
+	The Figure 2 shows the normalized velocities, temperature and concentration evolution for several times, some remarkable facts are:
 	\begin{itemize}
-		\item Buyancy force makes rise the warmer water from the bottom.
-		\item Cell formations even for early times.
+		\item Buoyancy force makes rise the warmer water from the bottom.
+		\item There are cell formations even for early times.
 		\item Iso-thermal and Iso-concetration regions.
 	\end{itemize}
 \end{block}
@@ -152,11 +152,11 @@ To solve numerically the equations:
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Cells and Spatial Resolution}
-	The Figure 1 shows that the simulation results depend on the discretization size. In the coarse discretization only 4 cells Rayleigh-Benard cells form, compared to 6 in the fine discretization.This indicates that some discretizations cannot completely resolve the strucure of the flow.
+	The Figure 1 shows that the simulation results depend on the discretization size. In the coarser discretization only 4 cells Rayleigh-Benard cells form, compared to 6 in the finer one. This indicates that some discretizations cannot completely resolve the structure of the flow.
 	\vspace{1em}
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/cells.pdf}
-	\caption{\hspace{1em}Cell on grids: (top) $\Delta x=156\times10^{-3}, \Delta y=62.5\times10^{-3}$ (bottom) $\Delta x=39\times10^{-3}, \Delta y=15.4\times10^{-3}.$}
+	\caption{\hspace{1em}Cells on grids: (top) $\Delta x=156\times10^{-3}, \Delta y=62.5\times10^{-3}$ (bottom) $\Delta x=39\times10^{-3}, \Delta y=15.4\times10^{-3}.$}
 \end{figure}
 \end{block}
 
@@ -172,16 +172,16 @@ To solve numerically the equations:
 \vspace{-2em}
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/figure1.pdf}
-\caption{Air thermal convection and mass transfer in normalized velocity, temperature and mass concetration for different times.}
+\caption{Air thermal convection and mass transfer normalized velocity, temperature and mass concentration for different times.}
 \end{figure}
 
 \begin{block}{Numerical Convergence}
 	\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column again
 	
 	\begin{column}{\onecolwid} % The first column within column 2 (column 2.1)
-		Due to the high Reynolds number the experiental study for the convergence rates presents some challenges:
+		Due to the high Reynolds number the experimental study for the convergence rates presents some challenges:
 		\begin{itemize}
-			\item Variations in the grid size cause variation in the direction of rotation in the cells.
+			\item The  in the grid size cause variation in the direction of rotation in the cells.
 		\end{itemize}
 	\end{column} % End of column 2.1
 	
@@ -220,7 +220,7 @@ To solve numerically the equations:
 	\begin{itemize}
 		\item Pythoplackton is the base of the oceanic food chain, it sinks in the oceans upto $160 m$ per year (passive swimmers).
 		\item The temperature in the ocean varies upto $10^{\circ}K$ in a year.
-		\item The buyency forces keep them it specific regions in the ocean.
+		\item The buoyancy forces keep them it specific regions in the ocean.
 	\end{itemize}
 	We wanted to study the effects of a variation of $2^{\circ}K$ in a big rectangular area in the sea (160m deep, 1.6km wide) with planktonic organisms in the bottom, getting as parameters:
 	$$Re=184269, \: Pr=7.56, \: Pe=6965.39$$
