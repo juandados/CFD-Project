@@ -80,12 +80,12 @@ elseif prob == 'air' | prob =='a'
     b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
     Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
     Ra = Pr*Gr;                 % Rayleigh number
-    tS = 0.6e3;                   % Real Experiment time [s] tS = 1e4; 
+    tS = 1e-1;                   % Real Experiment time [s] tS = 1e4; 
     tend = tS/L;                % Simulation time []
     D = 10;                     % Nutrient diffusion constant relative;
     Pe = Re*Pr*0.5;             % Peclet number;
     c = 1;                      % Nutrient concentration in the bottom wall;
-    dt = 3e-2;
+    dt = 1e-4;
     
 elseif prob == 'planckton' | prob == 'p'
     Ly = 1.6e2;                 % Cavity height [m]
@@ -127,9 +127,9 @@ dy = ly/ny;
 % Choose a time step based on the minimum of the two time step
 % restrictions that come from the von Neumann analysis of the
 % 2D linear advection-diffusion equation.
-% dt1 = min(dx,dy);              % advection restriction
-% dt2 = 0.5 / nu / (1/dx^2 + 1/dy^2); % diffusion restriction
-% dt3 = nu / Vd^2;                    % mixed (*not used*)
+dt1 = min(dx,dy);              % advection restriction
+dt2 = 0.5 / nu / (1/dx^2 + 1/dy^2); % diffusion restriction
+dt3 = nu / Vd^2;                    % mixed (*not used*)
 % safetyfac = 0.8;                    % "safety factor" (should be < 1)
 % nt = floor(tend / (min(dt1,dt2) * safetyfac));
 % dt = tend / nt;
@@ -137,14 +137,14 @@ dy = ly/ny;
 nt = floor(tend / dt);
 
 % Display parameters before starting.
-% fprintf( 1, '\nReynolds number: %f\n', Re );
-% fprintf( 1, 'Time step restrictions:\n    dt = %e (advective)\n', dt1 );
-% fprintf( 1, '    dt = %e (diffusive)\n    dt = %e (mixed - not used)\n', dt2, dt3 );
-% if dt1 < dt2, tstr = 'advection-limited';
-% else          tstr = 'diffusion-limited'; end;
-% fprintf( 1, 'Actual time step: %e  (%s)\n', dt, tstr );
-%fprintf( 1, '\nPress <enter> to continue ...\n' );
-%pause
+fprintf( 1, '\nReynolds number: %f\n', Re );
+fprintf( 1, 'Time step restrictions:\n    dt = %e (advective)\n', dt1 );
+fprintf( 1, '    dt = %e (diffusive)\n    dt = %e (mixed - not used)\n', dt2, dt3 );
+if dt1 < dt2, tstr = 'advection-limited';
+else          tstr = 'diffusion-limited'; end;
+fprintf( 1, 'Actual time step: %e  (%s)\n', dt, tstr );
+fprintf( 1, '\nPress <enter> to continue ...\n' );
+pause
 
 % Set up an equally-spaced rectangular grid.
 [xx,yy] = meshgrid(0:dx:lx, 0:dy:ly);
