@@ -1,7 +1,7 @@
 
 \documentclass[final]{beamer}
 
-\usepackage[scale=1.24]{beamerposter} % Use the beamerposter package for laying out the poster
+\usepackage[scale=1.1]{beamerposter} % Use the beamerposter package for laying out the poster
 
 \usetheme{confposter} % Use the confposter theme supplied with this template
 
@@ -23,8 +23,8 @@
 \newlength{\onecolwid}
 \newlength{\twocolwid}
 \newlength{\threecolwid}
-\setlength{\paperwidth}{48in} % A0 width: 46.8in
-\setlength{\paperheight}{36in} % A0 height: 33.1in
+\setlength{\paperwidth}{46.8in} % A0 width: 46.8in
+\setlength{\paperheight}{33.1in} % A0 height: 33.1in
 \setlength{\sepwid}{0.024\paperwidth} % Separation width (white space) between columns
 \setlength{\onecolwid}{0.22\paperwidth} % Width of one column
 \setlength{\twocolwid}{0.464\paperwidth} % Width of two columns
@@ -40,7 +40,7 @@
 %	TITLE SECTION 
 %----------------------------------------------------------------------------------------
 
-\title{Plankton Barbecue} % Poster title
+\title{Plankton Barbecue: Nutrient Flow due to Natural Thermal Convection} % Poster title
 
 \author{Juan D. Chacon} % Author(s)
 
@@ -181,14 +181,14 @@ To solve numerically the equations ...
 	\begin{column}{\onecolwid} % The first column within column 2 (column 2.1)
 		Due to the high Reynolds number the experimental study for the convergence rates presents some challenges:
 		\begin{itemize}
-			\item The  in the grid size cause variation in the direction of rotation in the cells.
+			\item Changes in the grid size lead to variations in the direction of rotation in the cells.
 		\end{itemize}
 	\end{column} % End of column 2.1
 	
 	\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
 		\vspace{-2em}
 		\begin{itemize}
-			\item To get a reliable reference it is necesary a both very fine grid and pretty small time step.
+			\item To get a reliable reference it is necessary both very fine grid and pretty small time step.
 		\end{itemize}
 
 		\begin{table}
@@ -219,12 +219,12 @@ To solve numerically the equations ...
 \begin{block}{And the plankton?}
 	\begin{itemize}
 		\item Pythoplackton is the base of the oceanic food chain, it sinks in the oceans upto $160 m$ per year (passive swimmers).
-		\item The temperature in the ocean varies upto $10^{\circ}K$ in a year.
-		\item The buoyancy forces keep them it specific regions in the ocean.
+		\item The temperature in the ocean may vary up to $10^{\circ}K$ per year.
+		\item The buoyancy forces keep them in specific regions of ocean.
 	\end{itemize}
-	We wanted to study the effects of a variation of $2^{\circ}K$ in a big rectangular area in the sea (160m deep, 1.6km wide) with planktonic organisms in the bottom, getting as parameters:
+	We wanted to study the effects of variations on temperature around $2^{\circ}K$ in a big rectangular area in the sea (160m deep, 1.6km wide) with planktonic organisms in the bottom, getting as parameters:
 	$$Re=184269, \: Pr=7.56, \: Pe=6965.39$$
-	Although the Reynolds number in enormus, some general structure of this phenomena may be preserved as the number of cells or the average concetration in specific areas.
+	Although the Reynolds number in enormous, some general structure of this phenomena may be preserved, e.g. the number of cells or the average concentration in specific areas.
 	
 \begin{figure}
 \includegraphics[width=1.0\linewidth]{images/planktonSim.pdf}
@@ -245,12 +245,12 @@ To solve numerically the equations ...
 \textbf{Conclusions}
 \begin{itemize}
 \item The behavior of the thermal cells depends on the size of the spatial discretization.
-\item Even with high Reynolds numbers the implemented method seems to show properlly the general structure of the fluid.
+\item Even with high Reynolds numbers the implemented method seems to show properly the general structure of the fluid.
 \end{itemize}
 \textbf{Pendings}
 \begin{itemize}
-\item A solver using the projection method was considered, however, the stagered grid was an issue for the energy equation.
-\item An implentation using the second order FTBS scheme will help to deal with higher Reynolds numbers.
+\item A solver using the projection method was considered, however, the staggered grid was not work as expected for the energy equation.
+\item An implementation using the second order FTBS scheme will help to deal with higher Reynolds numbers.
 \end{itemize}
 
 \end{alertblock}

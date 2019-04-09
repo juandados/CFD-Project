@@ -27,8 +27,9 @@ disp(prob)
 % Physical constants:
 Vd = 0;                         % lid velocity (m/s)
 if prob == 'glycerine' | prob == 'g'
-    Lx = 0.38;                  % Cavity width [m]
-    Ly = 0.04;                  % Cavity height [m]
+%     Lx = 0.38;                  % Cavity width [m]
+    Ly = 0.04;                  % Cavity height [m] 0.04
+    Lx = Ly;
     L = Ly;                     % Reference lenght [m]
     lx = Lx/L;                  % Normalized cavity width []
     ly = Ly/L;                  % Normalized cavity height []
@@ -39,22 +40,23 @@ if prob == 'glycerine' | prob == 'g'
     T0 = 293;                   % Reference Temperature [K]
     Tc = (TC-T0)/(TH-TC);       % Cold temperature [K]
     Th = (TH-T0)/(TH-TC);       % Hot temperature [K]
-    rho = 1264.02;              % Glycerine density [kg/m^3]
+    rho = 1264.02;              % Glycerine density [kg/m^3] 1264.02
     mu = 1.49;                  % Dynamic viscosity [kg/(m*s)]
     nu = mu/rho;                % Kinematic viscosity []
     B = 5e-4;                   % coeficient of thermal expansion [1/K]
-    Pr = 1.25e4;                % Prandtl number
+    Pr = 1.25e4;                % Prandtl number 1.25e4
     u0 = 1;                     % Reference velocity [m/s]
     Re = rho*u0*L/mu;           % Reynolds number
     b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
+    b = 1.79e-3;                 % reported normalized Beta
     Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
     Ra = Pr*Gr;                 % Rayleigh number
     tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
     tend = tS/L;                % Simulation time []
     D = 10;                     % Nutrient diffusion constant relative;
-    Pe = u0*L/D;                % Peclet number;
+    Pe = 0.5*Re*Pr;             % Peclet number;
     c = 1;                      % Nutrient concentration in the bottom wall;
-    dt = 1e-2;
+    dt = 1.5e-2;
     % Numerical parameters:
 
 elseif prob == 'air' | prob =='a'
@@ -80,12 +82,12 @@ elseif prob == 'air' | prob =='a'
     b = (Th-Tc)*B;              % normalized coeficient of thermal expansion []
     Gr = G*B*(Th-Tc)*(L^3/nu^2);% Grashof number
     Ra = Pr*Gr;                 % Rayleigh number
-    tS = 1e-1;                   % Real Experiment time [s] tS = 1e4; 
+    tS = 1e4;                   % Real Experiment time [s] tS = 1e4; 
     tend = tS/L;                % Simulation time []
     D = 10;                     % Nutrient diffusion constant relative;
     Pe = Re*Pr*0.5;             % Peclet number;
     c = 1;                      % Nutrient concentration in the bottom wall;
-    dt = 1e-4;
+    dt = 1e-1;
     
 elseif prob == 'planckton' | prob == 'p'
     Ly = 1.6e2;                 % Cavity height [m]
@@ -121,8 +123,8 @@ end
 
 
 % Derived parameters:
-dx = lx/nx;  
-dy = ly/ny;
+dx = lx/nx
+dy = ly/ny
 
 % Choose a time step based on the minimum of the two time step
 % restrictions that come from the von Neumann analysis of the
@@ -143,8 +145,8 @@ fprintf( 1, '    dt = %e (diffusive)\n    dt = %e (mixed - not used)\n', dt2, dt
 if dt1 < dt2, tstr = 'advection-limited';
 else          tstr = 'diffusion-limited'; end;
 fprintf( 1, 'Actual time step: %e  (%s)\n', dt, tstr );
-fprintf( 1, '\nPress <enter> to continue ...\n' );
-pause
+% fprintf( 1, '\nPress <enter> to continue ...\n' );
+% pause
 
 % Set up an equally-spaced rectangular grid.
 [xx,yy] = meshgrid(0:dx:lx, 0:dy:ly);
@@ -245,8 +247,9 @@ for i = 1 : nt,
   + (v(jj+1,ii).*C(jj+1,ii) - (v(jj-1,ii).*C(jj-1,ii))) / (2*dy)) ...
   + (1/(Pe))*dt*(C(jj,ii+1) - 2*C(jj,ii) + C(jj,ii-1)) / dx^2 ...
   + (1/(Pe))*dt*(C(jj+1,ii) - 2*C(jj,ii) + C(jj-1,ii)) / dy^2;
-
-  tt(i) = toc;
+  if numel(tt) < 1000
+    tt(i) = toc;
+  end
   nalerts = 100;
   if (floor(nalerts*i/nt)>floor(nalerts*(i-1)/nt))
     clc;
@@ -263,7 +266,8 @@ for i = 1 : nt,
       contourf(0:dx:lx,0:dy:ly,T);
 %       pcolor(0:dx:lx,0:dy:ly,T); shading interp; 
       colorbar; hold on;
-      quiver(xx,yy,(u./Len),(v./Len),0.6,'k-');
+      %quiver(xx,yy,(u./Len),(v./Len),0.6,'k-');
+      quiver(xx,yy,u,v,0.6,'k-');
       axis equal, axis([0 lx 0 ly]);
       % ------plot 2:
       subplot(2,1,2);

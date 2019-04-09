@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.3.3)  4 APR 2019 12:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.3.3)  5 APR 2019 15:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -662,7 +662,7 @@ beamerposter: checking size input, please wait.
 beamerposter: the input a0\ 1\ was correct, we proceed.
 beamerposter: finished size input check.
 beamerposter: myfontscale=1.0
-beamerposter: myfontscale=1.24
+beamerposter: myfontscale=1.1
 (/usr/share/texlive/texmf-dist/tex/latex/fp/fp.sty
 Package: fp 1995/04/02
 
@@ -1021,8 +1021,8 @@ File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
 * modes: includehead includefoot 
 * h-part:(L,W,R)=(28.45274pt, 3323.85117pt, 28.45274pt)
 * v-part:(T,H,B)=(0.0pt, 2388.89357pt, 0.0pt)
-* \paperwidth=3468.95999pt
-* \paperheight=2601.71999pt
+* \paperwidth=3382.2362pt
+* \paperheight=2392.13744pt
 * \textwidth=3323.85117pt
 * \textheight=2360.44084pt
 * \oddsidemargin=-43.81725pt
@@ -1122,7 +1122,7 @@ Dictionary: translator-theorem-dictionary, Language: English
 ) ABD: EverySelectfont initializing macros
 LaTeX Info: Redefining \selectfont on input line 51.
  (./main.nav)
-LaTeX Font Info:    Calculating math sizes for size <17.86> on input line 51.
+LaTeX Font Info:    Calculating math sizes for size <15.84> on input line 51.
 LaTeX Font Info:    Try loading font information for OT1+lmr on input line 51.
 
 (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
@@ -1146,59 +1146,58 @@ LaTeX Font Info:    Try loading font information for OMX+lmex on input line 51.
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <17.86> on input line 51.
+(Font)              <15.84> on input line 51.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12.50194> on input line 51.
+(Font)              <11.08794> on input line 51.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8.93> on input line 51.
+(Font)              <7.92> on input line 51.
 <images/planktonBBQRCropped.pdf, id=13, 446.15771pt x 422.96869pt>
 File: images/planktonBBQRCropped.pdf Graphic file (type pdf)
 <use images/planktonBBQRCropped.pdf>
 Package pdftex.def Info: images/planktonBBQRCropped.pdf  used on input line 263
 .
-(pdftex.def)             Requested size: 343.4266pt x 325.57718pt.
+(pdftex.def)             Requested size: 334.84096pt x 317.43225pt.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 263.
 
 (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Calculating math sizes for size <37.03> on input line 263.
+LaTeX Font Info:    Calculating math sizes for size <32.85> on input line 263.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <37.03> on input line 263.
+(Font)              <32.85> on input line 263.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <25.92088> on input line 263.
+(Font)              <22.9949> on input line 263.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <18.515> on input line 263.
+(Font)              <16.425> on input line 263.
 <images/cells.pdf, id=16, 466.7185pt x 220.26384pt>
 File: images/cells.pdf Graphic file (type pdf)
 <use images/cells.pdf>
 Package pdftex.def Info: images/cells.pdf  used on input line 263.
-(pdftex.def)             Requested size: 763.17543pt x 360.19649pt.
-LaTeX Font Info:    Calculating math sizes for size <30.85> on input line 263.
+(pdftex.def)             Requested size: 744.09608pt x 351.18913pt.
+LaTeX Font Info:    Calculating math sizes for size <27.37> on input line 263.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <30.85> on input line 263.
+(Font)              <27.37> on input line 263.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <21.59491> on input line 263.
+(Font)              <19.1589> on input line 263.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <15.425> on input line 263.
+(Font)              <13.685> on input line 263.
 <images/figure1.pdf, id=17, 1249.71396pt x 551.67206pt>
 File: images/figure1.pdf Graphic file (type pdf)
 <use images/figure1.pdf>
 Package pdftex.def Info: images/figure1.pdf  used on input line 263.
-(pdftex.def)             Requested size: 1609.6131pt x 710.59087pt.
+(pdftex.def)             Requested size: 1569.37286pt x 692.82925pt.
 <images/planktonSim.pdf, id=18, 452.04143pt x 124.16411pt>
 File: images/planktonSim.pdf Graphic file (type pdf)
 <use images/planktonSim.pdf>
 Package pdftex.def Info: images/planktonSim.pdf  used on input line 263.
-(pdftex.def)             Requested size: 763.17543pt x 209.64195pt.
+(pdftex.def)             Requested size: 744.09608pt x 204.40152pt.
 
-Overfull \hbox (4.99402pt too wide) detected at line 263
-[][][] [][][][][][][][][] [][][][][][][][][] [][][][][][][][][] [][][][][][][][
-][] [][][][][][][][][] [][][][][][][] 
+Overfull \hbox (36.135pt too wide) has occurred while \output is active
+[] []
  []
 
 
-Overfull \hbox (88.20334pt too wide) has occurred while \output is active
+Overfull \hbox (1.47955pt too wide) has occurred while \output is active
 []
  []
 
@@ -1233,13 +1232,17 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 265.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 265.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
  22276 strings out of 494847
- 432506 string characters out of 6179081
- 578854 words of memory out of 5000000
+ 432493 string characters out of 6179081
+ 579291 words of memory out of 5000000
  25069 multiletter control sequences out of 15000+600000
- 81611 words of font info for 77 fonts, out of 8000000 for 9000
+ 81591 words of font info for 77 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  52i,27n,66p,771b,1489s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dv
@@ -1249,7 +1252,7 @@ hare/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texmf/fonts/type1/public/lm
 f/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmss1
 7.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fo
 nts/type1/public/lm/lmsy10.pfb>
-Output written on main.pdf (1 page, 833852 bytes).
+Output written on main.pdf (1 page, 835597 bytes).
 PDF statistics:
  112 PDF objects out of 1000 (max. 8388607)
  74 compressed objects within 1 object stream
